@@ -14,9 +14,18 @@
 
 ## 截图
 
-> 待补。截图放在 `docs/screenshots/`，建议 4 张：录入页、复习页、出卷页、统计页。
-> 手机截图：`adb exec-out screencap -p > shot.png`
-> 也可以录一条 10 秒 GIF（拍照 → 识别 → 入库），README 顶部放 GIF 效果最好。
+<table>
+  <tr>
+    <td><img src="docs/screenshots/01-tiku.jpg" width="230"></td>
+    <td><img src="docs/screenshots/02-chujuan.jpg" width="230"></td>
+    <td><img src="docs/screenshots/03-baogao.jpg" width="230"></td>
+  </tr>
+  <tr>
+    <td align="center">今天该复习哪些，一眼看到</td>
+    <td align="center">按考点组一套变式卷</td>
+    <td align="center">错得最多的考点，本地算的</td>
+  </tr>
+</table>
 
 ## 功能
 
