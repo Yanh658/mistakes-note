@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f5f7">
+<title>错题集 · 拍一张，它替你记着</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:#f4f5f7;color:#16202c;
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 64px}
+a{color:#2f6fed;text-decoration:none}
+
+/* ---------- 顶部 ---------- */
+.nav{display:flex;align-items:center;gap:10px;padding:22px 0 6px}
+.logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#2f6fed,#5b8def);
+  display:grid;place-items:center;color:#fff;font-size:15px;font-weight:700;box-shadow:0 4px 12px rgba(47,111,237,.3)}
+.nav b{font-size:15.5px;letter-spacing:.2px}
+.nav span{color:#8b93a1;font-size:12.5px;margin-left:auto}
+
+/* ---------- Hero ---------- */
+.hero{padding:34px 0 10px}
+.hero .kicker{display:inline-block;font-size:12.5px;color:#2f6fed;background:#e8f0ff;
+  padding:4px 10px;border-radius:999px;font-weight:600;letter-spacing:.3px}
+h1{font-size:31px;line-height:1.3;letter-spacing:-.8px;margin:16px 0 12px;font-weight:800}
+h1 em{font-style:normal;color:#2f6fed}
+.lead{font-size:16px;color:#475569;margin:0 0 26px;max-width:34em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  height:46px;padding:0 22px;border-radius:12px;font-size:15px;font-weight:600;
+  background:#2f6fed;color:#fff;border:0;box-shadow:0 6px 18px rgba(47,111,237,.28)}
+.btn.ghost{background:#fff;color:#16202c;box-shadow:0 1px 2px rgba(16,26,45,.06);border:1px solid #e6eaf0}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.hint{font-size:12.5px;color:#8b93a1;margin-top:10px}
+
+/* ---------- 卡片 ---------- */
+.sec{margin-top:46px}
+.sec h2{font-size:19px;letter-spacing:-.3px;margin:0 0 4px;font-weight:700}
+.sec .sub{font-size:13.5px;color:#8b93a1;margin:0 0 16px}
+.card{background:#fff;border-radius:16px;padding:18px;margin:12px 0;
+  box-shadow:0 1px 2px rgba(16,26,45,.05),0 1px 10px rgba(16,26,45,.03)}
+.step{display:flex;gap:14px;align-items:flex-start}
+.step .n{flex:0 0 34px;height:34px;border-radius:11px;background:#eef3ff;color:#2f6fed;
+  display:grid;place-items:center;font-weight:700;font-size:15px}
+.step .t{font-weight:700;font-size:15.5px;margin-bottom:2px}
+.step .d{font-size:14px;color:#5b6675;line-height:1.6}
+
+/* ---------- 对比 ---------- */
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:14px}
+th,td{padding:11px 10px;text-align:left;vertical-align:top;border-bottom:1px solid #eef1f6}
+th{font-size:12.5px;color:#8b93a1;font-weight:600;text-transform:none}
+td:first-child{color:#5b6675;width:34%}
+td.good{color:#16202c;font-weight:600}
+td.bad{color:#98a0ac}
+tr:last-child td{border-bottom:0}
+
+/* ---------- 功能 ---------- */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feat{background:#fff;border-radius:14px;padding:14px;box-shadow:0 1px 2px rgba(16,26,45,.05)}
+.feat .i{font-size:19px}
+.feat .t{font-weight:700;font-size:14px;margin:6px 0 2px}
+.feat .d{font-size:12.5px;color:#7b8694;line-height:1.55}
+
+/* ---------- 提示 ---------- */
+.note{background:#fff8e8;border:1px solid #ffe2b0;border-radius:14px;padding:14px 16px;font-size:13.5px;color:#7a5b1c}
+.note b{color:#5f4614}
+.plain{background:#eef3ff;border:1px solid #d9e4ff;border-radius:14px;padding:14px 16px;font-size:13.5px;color:#2b4a80}
+
+ul.clean{margin:10px 0 0;padding-left:18px;color:#5b6675;font-size:14px}
+ul.clean li{margin:6px 0}
+
+.foot{text-align:center;color:#a2a9b4;font-size:12px;padding:38px 0 10px;line-height:1.9}
+.foot a{color:#8b93a1}
+@media (max-width:400px){
+  h1{font-size:27px}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="nav">
+    <div class="logo">错</div>
+    <b>错题集</b>
+    <span>本地运行 · 数据在手机里</span>
+  </div>
+
+  <div class="hero">
+    <div class="kicker">拍照即入库</div>
+    <h1>拍一张，<br><em>它替你记着。</em></h1>
+    <p class="lead">错题拍照存进相册，翻不到；手抄到本子上，抄不动。这里的做法是：
+      拍一张照片，它把题目和解析认成文字（连公式一起），然后按遗忘规律提醒你复习。</p>
+    <div class="cta">
+      <a class="btn" href="./">打开错题集</a>
+      <a class="btn ghost" href="#how">看看怎么用</a>
+    </div>
+    <div class="hint">第一次打开会提示你配一个「能看图的模型」，免费的就行。</div>
+  </div>
+
+  <div class="sec" id="how">
+    <h2>三步就完事</h2>
+    <p class="sub">不用抄，不用守着整理，想起来拍一张就行</p>
+
+    <div class="card">
+      <div class="step">
+        <div class="n">1</div>
+        <div>
+          <div class="t">拍</div>
+          <div class="d">点加号，拍题目照片，一道题最多 4 张。答案和解析也能单独拍，走另一条识别通道。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="step">
+        <div class="n">2</div>
+        <div>
+          <div class="t">认</div>
+          <div class="d">照片交给一个「能看图的大模型」：题干原样抄下、选项分行排好、
+            数学公式转成 LaTeX、自动打上知识点标签。看不清的地方会标 [看不清]，不瞎编。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="step">
+        <div class="n">3</div>
+        <div>
+          <div class="t">练</div>
+          <div class="d">到点了首页会亮起「今天该复习 N 题」。真会了就斩掉，不再出现；
+            不懂的可以让 AI 照着这道题出几道变式题，测是不是真懂。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>和「拍照存相册」有什么不一样</h2>
+    <p class="sub">同样是拍照，出去的东西不一样</p>
+    <div class="card" style="padding:6px 8px">
+      <table>
+        <tr><th></th><th>相册截图</th><th style="color:#2f6fed">错题集</th></tr>
+        <tr><td>找得到吗</td><td class="bad">翻半天</td><td class="good">按知识点分类，能搜</td></tr>
+        <tr><td>会提醒复习吗</td><td class="bad">不会</td><td class="good">按间隔重复自动排期</td></tr>
+        <tr><td>能改吗</td><td class="bad">拍错了就废</td><td class="good">文字可编辑</td></tr>
+        <tr><td>公式</td><td class="bad">一张图</td><td class="good">真 LaTeX，能复制能搜</td></tr>
+        <tr><td>会出题吗</td><td class="bad">不会</td><td class="good">照着错题出变式卷</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>还有什么</h2>
+    <p class="sub">拍完之后的那些事</p>
+    <div class="grid">
+      <div class="feat"><div class="i">🔁</div><div class="t">间隔重复</div><div class="d">会了往后推，忘了马上回来，不用自己排计划</div></div>
+      <div class="feat"><div class="i">✂️</div><div class="t">斩题</div><div class="d">真会了一刀下去不再出现，斩错了能捞回来</div></div>
+      <div class="feat"><div class="i">📝</div><div class="t">变式卷</div><div class="d">换数字不换方法，判断是真懂还是背答案</div></div>
+      <div class="feat"><div class="i">📊</div><div class="t">学习报告</div><div class="d">哪一章错得多、熟练率多少，一眼看清</div></div>
+      <div class="feat"><div class="i">📦</div><div class="t">自带题源</div><div class="d">同济高数上下册 933 题、四六级词汇，装上就能刷</div></div>
+      <div class="feat"><div class="i">💾</div><div class="t">一键备份</div><div class="d">题库连图片导出成文件，换手机能搬走</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>要先配一个 Key</h2>
+    <p class="sub">五分钟，免费额度够用很久</p>
+    <div class="plain">
+      识图需要一个「能看图的大模型」接口，去设置页填三样：地址、Key、模型名。
+      智谱的 <b>GLM-4V-Flash 是免费的</b>，硅基流动、阿里百炼注册也送额度。
+      文字解析那一路用 DeepSeek 之类便宜的就行，两家可以分开配。
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>说清楚它不是什么</h2>
+    <div class="note">
+      <b>不是拍照搜题</b>——它不直接给答案，只帮你把题抄下来。<br><br>
+      <b>不会替你学</b>——斩题、复习都是你自己点，它只负责记账和提醒。<br><br>
+      <b>照片会发出去</b>——识别时图片发给你自己配的那个模型接口；题目文字和学习记录只存在这台手机里。
+    </div>
+  </div>
+
+  <div class="foot">
+    错题集 · 本地版<br>
+    <a href="./">进入应用</a>
+  </div>
+
+</div>
+</body>
+</html>

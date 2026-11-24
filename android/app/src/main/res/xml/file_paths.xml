@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FileProvider 只共享 App 缓存里的 camera/ 目录，别把整个存储暴露出去 -->
+<paths>
+    <cache-path name="camera" path="camera/" />
+</paths>

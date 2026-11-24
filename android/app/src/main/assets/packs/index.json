@@ -1,0 +1,49 @@
+{
+ "packs": [
+  {
+   "file": "gaoshu-1.json",
+   "name": "高等数学·上册习题（同济）",
+   "count": 283,
+   "desc": "同济《高等数学》上册配套习题：函数与极限、导数与微分、微分中值定理、不定积分、定积分及应用。题干经人工校对；答案与解析由 AI 辅助生成、未经人工校对，遇到可疑之处请自行核对。",
+   "subject": "高数",
+   "source": "github.com/xihale/tongji-calculus",
+   "kb": 114
+  },
+  {
+   "file": "gaoshu-2.json",
+   "name": "高等数学·下册习题（同济）",
+   "count": 480,
+   "desc": "同济《高等数学》下册配套习题：微分方程、空间解析几何、多元函数微分、重积分、曲线曲面积分、无穷级数。题干经人工校对；答案与解析由 AI 辅助生成、未经人工校对。",
+   "subject": "高数",
+   "source": "github.com/xihale/tongji-calculus",
+   "kb": 207
+  },
+  {
+   "file": "gaoshu-3.json",
+   "name": "高数·期末真题与模拟卷",
+   "count": 170,
+   "desc": "高等数学下册期末测试真题与模拟卷，附答案与解析。适合期末前整卷练习。",
+   "subject": "高数",
+   "source": "github.com/xihale/tongji-calculus",
+   "kb": 55
+  },
+  {
+   "file": "english-cet4.json",
+   "name": "四级核心词汇",
+   "count": 2607,
+   "desc": "四级核心词汇，含音标与中文释义。来自 qwerty-learner 开源词表，可配合 AI 生成例句使用。",
+   "subject": "英语",
+   "source": "github.com/Kaiyiwing/qwerty-learner",
+   "kb": 327
+  },
+  {
+   "file": "english-cet6.json",
+   "name": "六级核心词汇",
+   "count": 2345,
+   "desc": "六级核心词汇，含音标与中文释义。来自 qwerty-learner 开源词表，可配合 AI 生成例句使用。",
+   "subject": "英语",
+   "source": "github.com/Kaiyiwing/qwerty-learner",
+   "kb": 326
+  }
+ ]
+}

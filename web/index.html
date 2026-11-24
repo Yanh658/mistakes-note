@@ -1,0 +1,2426 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f5f7">
+<meta name="color-scheme" content="only light">
+<meta name="supported-color-schemes" content="light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="错题集">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<title>错题集</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{color-scheme:only light}
+html{-webkit-text-size-adjust:100%}
+html,body{margin:0;padding:0;height:100%}
+body{
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;
+  background:#f4f5f7;color:#16202c;overscroll-behavior-y:contain;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+a{color:#2f6fed;text-decoration:none}
+#app{max-width:720px;margin:0 auto;min-height:100%;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+.page{padding:0 16px}
+.hdr{
+  position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;
+  padding:calc(10px + env(safe-area-inset-top)) 12px 10px;
+  background:rgba(244,245,247,.92);backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid #e6e8ec;
+}
+.hdr h1{font-size:17px;margin:0;font-weight:650;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icobtn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:18px;color:#334155}
+.icobtn:active{background:#e6e8ec}
+.card{background:#fff;border-radius:16px;padding:14px;margin:12px 0;box-shadow:0 1px 2px rgba(16,26,45,.05),0 1px 10px rgba(16,26,45,.03)}
+.card.flat{box-shadow:none;border:1px solid #e6e8ec}
+.row{display:flex;align-items:center;gap:10px}
+.sp{flex:1}
+.muted{color:#6b7280;font-size:13px}
+.tiny{font-size:12px;color:#8b93a1}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:11px 16px;border-radius:12px;background:#eef1f6;color:#1f2937;font-weight:600;font-size:15px;
+  transition:transform .08s,opacity .15s;
+}
+.btn:active{transform:scale(.975);opacity:.85}
+.btn.primary{background:#2f6fed;color:#fff;box-shadow:0 2px 10px rgba(47,111,237,.28)}
+.btn.ghost{background:transparent;border:1px solid #d7dbe2}
+.btn.danger{background:#fdecec;color:#d92d20}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.45}
+.btn.sm{padding:8px 12px;font-size:13.5px;border-radius:10px}
+.tabs{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(12px);
+  border-top:1px solid #e6e8ec;padding-bottom:env(safe-area-inset-bottom);
+}
+.tabs .t{flex:1;padding:9px 0 8px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#8b93a1}
+.tabs .t .i{font-size:19px;line-height:1.1;filter:grayscale(1);opacity:.6}
+.tabs .t.on{color:#2f6fed;font-weight:600}
+.tabs .t.on .i{filter:none;opacity:1}
+.fab{
+  position:fixed;right:18px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:29;
+  width:56px;height:56px;border-radius:50%;background:#2f6fed;color:#fff;font-size:28px;
+  display:grid;place-items:center;box-shadow:0 6px 20px rgba(47,111,237,.4);
+}
+.fab:active{transform:scale(.94)}
+.empty{text-align:center;padding:56px 20px;color:#8b93a1}
+.empty .e{font-size:44px;opacity:.5;margin-bottom:10px}
+.bank{display:flex;align-items:center;gap:12px;padding:14px;background:#fff;border-radius:16px;margin:10px 0;box-shadow:0 1px 2px rgba(16,26,45,.05)}
+.bank .em{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:#eef3ff}
+.bank .nm{font-weight:600;font-size:15.5px}
+.ring{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:700;color:#2f6fed}
+.qitem{background:#fff;border-radius:14px;padding:12px 14px;margin:9px 0;box-shadow:0 1px 2px rgba(16,26,45,.05)}
+.qitem .qt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:14.5px;line-height:1.5}
+.tagrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{display:inline-block;vertical-align:top;font-size:11.5px;padding:2.5px 8px;border-radius:7px;background:#eef3ff;color:#2f6fed;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.tag.g{background:#eaf7ee;color:#15803d}
+.tag.o{background:#fff2e5;color:#b45309}
+.field{margin:12px 0}
+.field label{display:block;font-size:13px;font-weight:600;color:#475569;margin-bottom:6px}
+.inp,textarea.inp,select.inp{
+  width:100%;padding:11px 12px;border:1px solid #dde1e8;border-radius:12px;background:#fff;
+  outline:none;transition:border-color .15s,box-shadow .15s;
+}
+.inp:focus{border-color:#2f6fed;box-shadow:0 0 0 3px rgba(47,111,237,.12)}
+textarea.inp{resize:vertical;min-height:96px;line-height:1.6}
+.imgs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.thumb{position:relative;width:76px;height:76px;border-radius:12px;overflow:hidden;background:#eef1f6}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb .x{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;font-size:12px;display:grid;place-items:center}
+.addimg{width:76px;height:76px;border-radius:12px;border:1.5px dashed #cbd2dc;display:grid;place-items:center;font-size:24px;color:#98a2b3;background:#fbfcfd}
+.chipbox{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:1px solid #dde1e8;border-radius:12px;background:#fff;min-height:46px;align-items:center}
+.chipbox input{border:0;outline:none;flex:1;min-width:90px;padding:4px;background:transparent}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;background:#2f6fed;color:#fff;padding:4px 8px;border-radius:8px}
+.chip b{font-weight:400;opacity:.8;padding-left:2px}
+.sug{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.sug .s{font-size:12px;padding:4px 9px;border-radius:8px;background:#f1f4f9;color:#475569}
+.review{display:flex;flex-direction:column;min-height:calc(100vh - 190px)}
+.qcard{background:#fff;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 1px 3px rgba(16,26,45,.07)}
+.qtext{font-size:17px;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+.divider{height:1px;background:#eef1f6;margin:16px 0}
+.ans{white-space:pre-wrap;word-break:break-word;line-height:1.75;background:#fbfcfd;border-radius:12px;padding:12px;border:1px solid #eef1f6}
+.bar{height:8px;border-radius:99px;background:#eef1f6;overflow:hidden}
+.bar i{display:block;height:100%;background:#2f6fed;border-radius:99px;transition:width .4s}
+.stat{text-align:center;padding:8px 0}
+.stat .v{font-size:22px;font-weight:700;letter-spacing:-.5px}
+.stat .k{font-size:11.5px;color:#8b93a1}
+.hbars{display:flex;flex-direction:column;gap:8px}
+.hbar{display:grid;grid-template-columns:110px 1fr 34px;align-items:center;gap:8px;font-size:12.5px}
+.hbar .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#475569}
+.hbar .tr{height:9px;background:#eef1f6;border-radius:99px;overflow:hidden}
+.hbar .tr i{display:block;height:100%;background:linear-gradient(90deg,#5b8def,#2f6fed);border-radius:99px}
+.hbar .n{text-align:right;color:#8b93a1}
+#toast{position:fixed;left:50%;transform:translateX(-50%) translateY(20px);bottom:calc(92px + env(safe-area-inset-bottom));
+  background:#1f2937;color:#fff;padding:11px 16px;border-radius:12px;font-size:13.5px;z-index:60;opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s;display:flex;align-items:center;gap:12px;max-width:88vw;box-shadow:0 8px 28px rgba(0,0,0,.25)}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+#toast button{color:#7dd3fc;font-weight:600;white-space:nowrap}
+.loading{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+.loading.dark{border-color:#c9d3e3;border-top-color:#2f6fed}
+@keyframes sp{to{transform:rotate(360deg)}}
+.sheet{position:fixed;inset:0;z-index:50;background:rgba(15,23,42,.42);display:none;align-items:flex-end;justify-content:center}
+.sheet.on{display:flex}
+.sheet .box{background:#fff;width:100%;max-width:720px;border-radius:20px 20px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto;animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(24px);opacity:.6}}
+.printonly{display:none}
+@media print{
+  body{background:#fff}
+  #app{padding:0;max-width:none}
+  .hdr,.tabs,.fab,#toast,.noprint{display:none!important}
+  .card{box-shadow:none;border:0;padding:0}
+  .printonly{display:block}
+  .qtext{font-size:14pt}
+  .examq{page-break-inside:avoid;margin-bottom:14pt}
+}
+
+.katex-display{margin:8px 0;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.qtext .katex,.ans .katex{font-size:1.02em}
+
+#cropOv{position:fixed;inset:0;z-index:300;background:#0b0f18;display:none;flex-direction:column;
+  align-items:center;justify-content:center;gap:14px;padding:16px}
+#cropOv.on{display:flex}
+#cropOv canvas{touch-action:none;max-width:100%;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+#cropOv .cropbar{color:#cbd5e1;font-size:13px;text-align:center;line-height:1.6}
+#cropOv{color:#e8edf5}
+#cropOv .cropbar{color:#e8edf5;font-size:13.5px}
+#cropOv .cropact{display:flex;gap:10px;width:100%;max-width:460px;background:rgba(255,255,255,.06);
+  padding:10px;border-radius:14px}
+#cropOv .cropact .btn{flex:1;height:44px;font-size:14.5px}
+#cropOv .btn{background:#ffffff !important;color:#101827 !important}
+#cropOv .btn.primary{background:#2f6fed !important;color:#ffffff !important}
+#cropOv .croprot .btn{background:#eef3ff !important;color:#1e40af !important}
+.tagnote{background:#fffbe8;border:1px solid #ffe9b0;border-radius:10px;padding:8px 10px;
+  margin:8px 4px 0;font-size:12.5px;color:#6b5312;line-height:1.6}
+.thumb .cr{position:absolute;left:6px;bottom:6px;width:24px;height:24px;border-radius:50%;
+  background:rgba(15,23,42,.65);color:#fff;font-size:13px;display:grid;place-items:center}
+.chipadd{flex:0 0 auto;width:30px;height:30px;border-radius:9px;background:#2f6fed;color:#fff;
+  font-size:17px;line-height:1;display:grid;place-items:center;margin-left:4px}
+.croprot{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.croprot .btn{padding:6px 14px;font-size:13px}
+.upd{position:fixed;left:12px;right:12px;bottom:calc(78px + env(safe-area-inset-bottom));z-index:90;
+  background:#16202c;color:#fff;border-radius:14px;padding:10px 12px;display:flex;gap:8px;align-items:center;
+  font-size:13px;box-shadow:0 10px 28px rgba(0,0,0,.28)}
+.upd .btn{height:34px;padding:0 12px;font-size:13px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<div class="sheet" id="sheet"><div class="box" id="sheetBox"></div></div>
+<script src="vendor/katex/katex.min.js"></script>
+<script>
+'use strict';
+/* ============================================================
+   0. 基础工具
+   ============================================================ */
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id' + Date.now() + Math.random().toString(16).slice(2));
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* 公式渲染：三种输入都要能处理
+   1) 规范的 $...$ / $$...$$
+   2) 模型偷懒不写 $，直接给 \int \frac{...}
+   3) 中文和公式混在一行
+   渲染失败时回退成原文，绝不显示红色的报错源码。 */
+const CJK_RE = /[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/;
+function tryTex(tex, display) {
+  try {
+    const html = katex.renderToString(tex, { displayMode: !!display, throwOnError: false, strict: false });
+    return html.indexOf('katex-error') >= 0 ? null : html;
+  } catch (e) { return null; }
+}
+function looksMath(run) {
+  return /\\[a-zA-Z]+|\^\{|_\{|\^[0-9A-Za-z]/.test(run);
+}
+function mdInline(escaped) {
+  return String(escaped)
+    .replace(/\*\*([^*\n]+?)\*\*/g, '<b>$1</b>')
+    .replace(/(^|[^*])\*([^*\n]+?)\*(?!\*)/g, '$1<i>$2</i>');
+}
+function renderPlainRun(run) {
+  if (!run) return '';
+  if (!looksMath(run)) return mdInline(esc(run));
+  return run.split(/([\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]+)/).map(seg => {
+    if (!seg) return '';
+    if (CJK_RE.test(seg) || !looksMath(seg)) return mdInline(esc(seg));
+    let head = '', core = seg, tail = '';
+    const ws = core.match(/^(\s*)([\s\S]*?)(\s*)$/);
+    if (ws) { head = ws[1]; core = ws[2]; tail = ws[3]; }
+    const pm = core.match(/^([\s\S]*?)([，。；：、,.;:]+)$/);
+    if (pm) { core = pm[1]; tail = pm[2] + tail; }
+    if (!core) return mdInline(esc(seg));
+    const html = tryTex(core, false);
+    return head + (html || mdInline(esc(core))) + tail;
+  }).join('');
+}
+/** 单行：处理 $...$ / \(...\)，其余按纯文本 */
+function renderMathLine(line) {
+  if (!line) return '';
+  if (/^\s*-{3,}\s*$/.test(line)) return '<hr>';
+  let out = '', last = 0, m;
+  const re = /\\\\\(([\s\S]+?)\\\\\)|\$([^$\n]+?)\$/g;
+  while ((m = re.exec(line))) {
+    out += renderPlainRun(line.slice(last, m.index));
+    const tex = m[1] != null ? m[1] : m[2];
+    out += tryTex(tex, false) || mdInline(esc(m[0]));
+    last = m.index + m[0].length;
+  }
+  out += renderPlainRun(line.slice(last));
+  return out;
+}
+/** 整段：先把跨行的 $$...$$ / \[...\] 整块渲染，剩下的按行处理 */
+function mathHtml(raw) {
+  const src = String(raw == null ? '' : raw);
+  if (!window.katex) return esc(src);
+  let out = '', last = 0, m;
+  const blockRe = /\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]/g;
+  const inlineLines = t => t.split('\n').map(renderMathLine).join('\n');
+  while ((m = blockRe.exec(src))) {
+    out += inlineLines(src.slice(last, m.index));
+    const tex = (m[1] != null ? m[1] : m[2]).replace(/\s*\n\s*/g, ' ');
+    const html = tryTex(tex, true);
+    out += html ? '\n<div class="mathblock">' + html + '</div>\n' : mdInline(esc(m[0]));
+    last = m.index + m[0].length;
+  }
+  out += inlineLines(src.slice(last));
+  return out;
+}
+const now = () => Date.now();
+const DAY = 86400000;
+function fmtDate(t) {
+  const d = new Date(t), p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+function relTime(t) {
+  const d = now() - t;
+  if (d < 60000) return '刚刚';
+  if (d < 3600000) return Math.floor(d / 60000) + ' 分钟前';
+  if (d < DAY) return Math.floor(d / 3600000) + ' 小时前';
+  if (d < DAY * 7) return Math.floor(d / DAY) + ' 天前';
+  return fmtDate(t);
+}
+let toastTimer = null;
+function toast(msg, action) {
+  const el = $('#toast');
+  el.innerHTML = `<span>${esc(msg)}</span>` + (action ? `<button id="toastAct">${esc(action.label)}</button>` : '');
+  el.classList.add('on');
+  if (action) { $('#toastAct').onclick = () => { el.classList.remove('on'); action.fn(); }; }
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('on'), action ? 5200 : 2400);
+}
+function openSheet(html) {
+  $('#sheetBox').innerHTML = html;
+  $('#sheet').classList.add('on');
+}
+function closeSheet() { $('#sheet').classList.remove('on'); }
+$('#sheet').addEventListener('click', e => { if (e.target.id === 'sheet') closeSheet(); });
+
+/* ============================================================
+   1. IndexedDB
+   ============================================================ */
+const DB_NAME = 'cuoti-db', DB_VER = 1;
+let _db = null;
+function dbOpen() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open(DB_NAME, DB_VER);
+    r.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('banks')) db.createObjectStore('banks', { keyPath: 'id' });
+      if (!db.objectStoreNames.contains('questions')) {
+        const s = db.createObjectStore('questions', { keyPath: 'id' });
+        s.createIndex('bankId', 'bankId');
+      }
+      if (!db.objectStoreNames.contains('images')) db.createObjectStore('images', { keyPath: 'id' });
+      if (!db.objectStoreNames.contains('kv')) db.createObjectStore('kv', { keyPath: 'k' });
+    };
+    r.onsuccess = e => { _db = e.target.result; res(_db); };
+    r.onerror = () => rej(r.error);
+  });
+}
+function tx(store, mode) { return _db.transaction(store, mode).objectStore(store); }
+function dbGet(store, key) {
+  return new Promise((res, rej) => { const r = tx(store).get(key); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+}
+function dbAll(store) {
+  return new Promise((res, rej) => { const r = tx(store).getAll(); r.onsuccess = () => res(r.result || []); r.onerror = () => rej(r.error); });
+}
+function dbPut(store, val) {
+  return new Promise((res, rej) => { const r = tx(store, 'readwrite').put(val); r.onsuccess = () => res(val); r.onerror = () => rej(r.error); });
+}
+function dbDel(store, key) {
+  return new Promise((res, rej) => { const r = tx(store, 'readwrite').delete(key); r.onsuccess = () => res(); r.onerror = () => rej(r.error); });
+}
+function dbClear(store) {
+  return new Promise((res, rej) => { const r = tx(store, 'readwrite').clear(); r.onsuccess = () => res(); r.onerror = () => rej(r.error); });
+}
+function dbBulkPut(store, arr) {
+  return new Promise((res, rej) => {
+    const t = _db.transaction(store, 'readwrite');
+    const os = t.objectStore(store);
+    arr.forEach(v => os.put(v));
+    t.oncomplete = () => res(); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error);
+  });
+}
+
+/* ============================================================
+   2. 全局状态
+   ============================================================ */
+const DEFAULT_SETTINGS = {
+  text: { baseUrl: 'https://api.deepseek.com/v1', apiKey: '', model: 'deepseek-chat' },
+  vision: { baseUrl: '', apiKey: '', model: '' },   // 留空 = 复用文字通道
+  img: 'single',                                    // 拍照压缩档位，见 IMG_MODES
+  proxy: true,
+  proxyUrl: '',                                     // 留空 = 同源 /proxy；部署到别处时填 Worker 地址
+  reportDays: 7
+};
+var S = {
+  banks: [], qs: [], settings: { ...DEFAULT_SETTINGS },
+  imgCache: new Map(), tagNotes: {},
+  review: null,
+  lastSlash: null
+};
+function migrateSettings(v) {
+  if (!v) return JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+  if (v.text && v.vision) return Object.assign(JSON.parse(JSON.stringify(DEFAULT_SETTINGS)), v);
+  return {
+    text: { baseUrl: v.baseUrl || DEFAULT_SETTINGS.text.baseUrl, apiKey: v.apiKey || '', model: v.textModel || 'deepseek-chat' },
+    vision: { baseUrl: '', apiKey: '', model: v.visionModel || '' },
+    reportDays: v.reportDays || 7
+  };
+}
+
+/** 旧数据里 \frac 曾被 JSON 当成换页符吃成 "rac"，这里按控制字符还原回去 */
+function fixCtrlText(s) {
+  if (!s || typeof s !== 'string') return s;
+  if (!/[\x08\x09\x0b\x0c\x0d]/.test(s)) return s;
+  return s.replace(/\x0c/g, '\\f').replace(/\x08/g, '\\b')
+          .replace(/\x0b/g, '\\v').replace(/\x0d/g, '\\r').replace(/\x09/g, '\\t');
+}
+
+/** 把 \(...\) / \[...\] 统一成 $...$ / $$...$$，顺便清掉多余空白 */
+function normalizeMathText(s) {
+  if (!s) return s;
+  return String(s)
+    .replace(/\\n(?![a-z])/g, '\n')
+    .replace(/\\\[([\s\S]+?)\\\]/g, (m, t) => '$$' + t.trim() + '$$')
+    .replace(/\\\(([\s\S]+?)\\\)/g, (m, t) => '$' + t.trim() + '$');
+}
+/** 重排一道题的格式：修控制字符 + 统一公式定界符，然后重渲染 */
+async function refixQ(id) {
+  const q = qById(id);
+  if (!q) return;
+  const before = q.question + '\n' + q.analysis;
+  q.question = normalizeMathText(fixCtrlText(q.question));
+  q.analysis = normalizeMathText(fixCtrlText(q.analysis));
+  if (before === q.question + '\n' + q.analysis) { toast('格式已经是好的，重新渲染一次'); render(); return; }
+  q.updatedAt = now();
+  try { await dbPut('questions', q); } catch (e) { toast('保存失败：' + e.message); }
+  toast('已重排格式');
+  render();
+}
+/** 全库重排（设置页用） */
+async function refixAll() {
+  let n = 0;
+  for (const q of S.qs) {
+    const bq = q.question, ba = q.analysis;
+    const nq = normalizeMathText(fixCtrlText(q.question));
+    const na = normalizeMathText(fixCtrlText(q.analysis));
+    if (nq !== bq || na !== ba) { q.question = nq; q.analysis = na; q.updatedAt = now(); await dbPut('questions', q); n++; }
+  }
+  toast(n ? `重排了 ${n} 道题` : '所有题目格式都正常');
+  render();
+}
+
+async function migrateCtrlText() {
+  let n = 0;
+  for (const q of S.qs) {
+    const qn = normalizeMathText(fixCtrlText(q.question)), an = normalizeMathText(fixCtrlText(q.analysis));
+    if (qn !== q.question || an !== q.analysis) {
+      q.question = qn; q.analysis = an; q.updatedAt = now();
+      await dbPut('questions', q);
+      n++;
+    }
+  }
+  if (n) toast(`修好了 ${n} 道题的公式写法`);
+}
+
+
+
+/* ---------- 版本自检：避免一直跑缓存里的旧页面 ---------- */
+async function checkNewVersion() {
+  try {
+    const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) return;
+    const j = await r.json();
+    if (!j.v || j.v === APP_VER) return;
+    if (document.getElementById('updBar')) return;
+    const bar = document.createElement('div');
+    bar.id = 'updBar';
+    bar.className = 'upd';
+    bar.innerHTML = `<span style="flex:1">有新版本 <b>${j.v}</b>，当前是 ${APP_VER}</span>
+      <button class="btn primary sm" onclick="forceReload('${j.v}')">立即刷新</button>
+      <button class="btn ghost sm" onclick="document.getElementById('updBar').remove()">稍后</button>`;
+    document.body.appendChild(bar);
+  } catch (e) { /* 离线就跳过 */ }
+}
+
+/** 依次探测代理是否可用：发一个假请求，能拿到任意 HTTP 响应就说明转发通了 */
+async function probeProxy() {
+  // APP 里有原生通道，压根不走代理，直接告诉用户不用管
+  if (hasNative()) {
+    openSheet(`<b>代理自检</b>
+      <div class="tiny" style="margin:10px 0;line-height:1.9">APP 内已启用<b>原生通道</b>：请求由 Java 层直接发出，<br>没有跨域限制，<b>不需要代理</b>，这里的设置可以忽略。</div>
+      <button class="btn ghost wide" style="margin-top:14px" onclick="closeSheet()">关闭</button>`);
+    return;
+  }
+  const target = 'https://api.deepseek.com/v1/models';
+  const list = [...new Set(
+    [(S.settings.proxyUrl || '').trim(), REMOTE_PROXY, location.origin].filter(Boolean)
+  )];
+  const out = [];
+  for (const b of list) {
+    const t0 = Date.now();
+    try {
+      const r = await fetch(b + '/proxy?u=' + encodeURIComponent(target), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer probe' },
+        body: '{}'
+      });
+      out.push(`${b} → ${r.status} (${Date.now() - t0}ms) ${r.status < 500 ? '✅' : '⚠️'}`);
+      if (r.status < 500) S.goodProxy = b;
+    } catch (e) {
+      out.push(`${b} → 连不上 ❌`);
+    }
+  }
+  openSheet(`<b>代理自检</b>
+    <div class="tiny" style="margin:10px 0;line-height:1.9">${out.map(x => esc(x)).join('<br>')}</div>
+    <div class="tiny" style="color:#8b93a1">能拿到 401/400 都算通（说明请求到了模型那边）；连不上才是没通。</div>
+    <div class="row" style="gap:10px;margin-top:14px">
+      <button class="btn ghost" style="flex:1" onclick="closeSheet()">关闭</button>
+      <button class="btn primary" style="flex:1" onclick="closeSheet();probeProxy()">再测一次</button>
+    </div>`);
+}
+
+function forceReload(v) {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())).catch(() => { });
+  }
+  location.replace(location.pathname + '?v=' + String(v || Date.now()).replace(/^v/, ''));
+}
+
+/* ---------- 回收站：15 天后自动清理 ---------- */
+const TRASH_DAYS = 15;
+async function purgeExpiredTrash() {
+  const limit = TRASH_DAYS * DAY;
+  const t = now();
+  const expired = [];
+  for (const q of S.qs) {
+    if (!q.trashed) continue;
+    // 老数据没有删除时间：从现在开始算 15 天，绝不直接清掉
+    if (!q.deletedAt) { q.deletedAt = t; await dbPut('questions', q); continue; }
+    if (t - q.deletedAt > limit) expired.push(q);
+  }
+  if (!expired.length) return 0;
+  for (const q of expired) {
+    for (const i of allImgs(q)) await dbDel('images', i);
+    await dbDel('questions', q.id);
+  }
+  const ids = new Set(expired.map(q => q.id));
+  S.qs = S.qs.filter(q => !ids.has(q.id));
+  return expired.length;
+}
+/** 还剩几天被清掉（用于回收站列表） */
+function trashDaysLeft(q) {
+  const spent = now() - (q.deletedAt || now());
+  return Math.max(0, Math.ceil((TRASH_DAYS * DAY - spent) / DAY));
+}
+
+async function loadAll() {
+  S.banks = (await dbAll('banks')).sort((a, b) => a.createdAt - b.createdAt);
+  S.qs = (await dbAll('questions')).sort((a, b) => b.createdAt - a.createdAt);
+  const st = await dbGet('kv', 'settings');
+  S.settings = migrateSettings(st ? st.v : null);
+  await loadTagNotes();
+  if (st && st.v && st.v.baseUrl !== undefined) await saveSettings();
+  for (const b of S.banks) {
+    if (b.kind) continue;
+    const list = S.qs.filter(q => q.bankId === b.id);
+    b.kind = (list.length && list.every(q => q.origin === 'pack')) ? 'source' : 'mine';
+    await dbPut('banks', b);
+  }
+}
+async function saveSettings() { await dbPut('kv', { k: 'settings', v: S.settings }); }
+const bankById = id => S.banks.find(b => b.id === id);
+const qById = id => S.qs.find(q => q.id === id);
+function qsOf(bankId) { return S.qs.filter(q => !q.trashed && (!bankId || q.bankId === bankId)); }
+const isMineBank = b => !!b && b.kind !== 'source';
+const allImgs = q => [...(q.imgs || []), ...(q.solImgs || [])];
+const activeQs = bankId => qsOf(bankId).filter(q => isMineBank(bankById(q.bankId)));
+const myBanks = () => S.banks.filter(b => b.kind !== 'source');
+const sourceBanks = () => S.banks.filter(b => b.kind === 'source');
+
+/* ============================================================
+   3. AI
+   ============================================================ */
+const APP_VER = 'v28';
+// 线上代理默认留空：开源版本不该把用户固定引流到某一个人的 Worker 上。
+// 网页版同源部署时 location.origin 自己就是代理；APP 里有原生通道，根本不需要代理；
+// 只有在「网页版 + 静态托管没有 /proxy」这种情况下，用户才需要去设置里自己填一个。
+const REMOTE_PROXY = '';
+function chan(name) {
+  const st = S.settings, t = st.text || {}, v = st.vision || {};
+  if (name === 'vision') {
+    return { baseUrl: v.baseUrl || t.baseUrl || '', apiKey: v.apiKey || t.apiKey || '', model: v.model || '' };
+  }
+  return { baseUrl: t.baseUrl || '', apiKey: t.apiKey || '', model: t.model || '' };
+}
+function aiEndpoint(base) { return (base || '').trim().replace(/\/+$/, '') + '/chat/completions'; }
+
+/** APP 壳里会注入 window.NativeHTTP；网页版没有，返回 false */
+function hasNative() {
+  return !!(window.NativeHTTP && typeof window.NativeHTTP.post === 'function');
+}
+
+/**
+ * 把请求交给 Java 层发（HttpURLConnection）。返回一个和 fetch 响应同形状的对象，
+ * 后面统一用 resp.status / resp.ok / resp.text() 处理，两条路径的代码不必分叉。
+ *
+ * 这里刻意做成异步：Java 发完请求再回调 window.__nativeHTTPDone(id, raw)。
+ * 如果用同步接口，识图那几十秒会把 JS 线程整个卡住，转圈动画也停。
+ */
+let nativeSeq = 0;
+const nativePending = new Map();
+window.__nativeHTTPDone = function (id, raw) {
+  const done = nativePending.get(id);
+  if (!done) return;
+  nativePending.delete(id);
+  done(raw);
+};
+
+function nativePost(url, payload) {
+  return new Promise((resolve, reject) => {
+    const id = 'n' + (++nativeSeq);
+    const timer = setTimeout(() => {
+      nativePending.delete(id);
+      reject(new Error('原生通道超过 200 秒没回应'));
+    }, 200000);
+    nativePending.set(id, raw => {
+      clearTimeout(timer);
+      let j;
+      try { j = JSON.parse(raw); } catch (e) {
+        return reject(new Error('原生通道返回异常：' + String(raw).slice(0, 120)));
+      }
+      if (!j.ok) return reject(new Error(j.error || '原生请求失败'));
+      resolve({
+        ok: j.status >= 200 && j.status < 300,
+        status: j.status,
+        text: () => Promise.resolve(j.body || '')
+      });
+    });
+    try {
+      window.NativeHTTP.post(url, JSON.stringify(payload.headers || {}), payload.body || '', id);
+    } catch (e) {
+      clearTimeout(timer);
+      nativePending.delete(id);
+      reject(e);
+    }
+  });
+}
+async function aiChat(messages, opt) {
+  opt = opt || {};
+  const cfg = chan(opt.channel || 'text');
+  if (!cfg.apiKey) throw new Error(opt.channel === 'vision' ? '还没配识图模型的 Key' : '还没填 API Key，请先去「设置」');
+  const model = opt.model || cfg.model;
+  if (!model) throw new Error('没填模型名');
+  const body = { model, messages, temperature: opt.temperature ?? 0.3, stream: false };
+  if (opt.maxTokens) body.max_tokens = opt.maxTokens;
+  const target = aiEndpoint(cfg.baseUrl);
+  const payload = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.apiKey },
+    body: JSON.stringify(body)
+  };
+  let resp = null, lastErr = null;
+
+  if (hasNative()) {
+    // APP 内：Java 层直接发，没有跨域限制，也就不需要任何代理
+    try { resp = await nativePost(target, payload); } catch (e) { lastErr = e; }
+    if (!resp) {
+      throw new Error('网络请求失败：' + ((lastErr && lastErr.message) || '连不上') + '（查一下网络和「API 地址」）');
+    }
+  } else {
+    const useProxy = S.settings.proxy !== false && location.protocol.startsWith('http');
+    const custom = (S.settings.proxyUrl || '').trim().replace(/\/+$/, '');
+    // 代理候选：填了就用填的；没填就先本机同源，失败再退到线上代理（配置了才退）
+    let cand;
+    if (!useProxy) cand = [];
+    else if (custom) cand = [...new Set([custom, REMOTE_PROXY, location.origin].filter(Boolean))];
+    else cand = [...new Set([location.origin, REMOTE_PROXY].filter(Boolean))];
+    // 上次成功的排最前，省掉一次失败等待
+    if (S.goodProxy && cand.includes(S.goodProxy)) cand = [S.goodProxy, ...cand.filter(b => b !== S.goodProxy)];
+    if (!useProxy) {
+      try { resp = await fetch(target, payload); } catch (e) { lastErr = e; }
+    } else {
+      for (const b of cand) {
+        try {
+          resp = await fetch(b + '/proxy?u=' + encodeURIComponent(target), payload);
+          if (resp) { S.goodProxy = b; break; }
+        } catch (e) { lastErr = e; if (S.goodProxy === b) S.goodProxy = null; }
+      }
+    }
+    if (!resp) {
+      throw new Error('网络请求失败：' + ((lastErr && lastErr.message) || '连不上') +
+        (useProxy ? '（本机服务没跑，线上代理也没连上——检查网络或设置里的「代理地址」）'
+                  : '（浏览器跨域被拦，去设置打开「代理」）'));
+    }
+  }
+  const text = await resp.text();
+  if (!resp.ok) throw new Error('API 错误 ' + resp.status + '：' + text.slice(0, 300));
+  let j;
+  try { j = JSON.parse(text); } catch (e) { throw new Error('返回不是 JSON：' + text.slice(0, 200)); }
+  const c = j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+  if (c == null) throw new Error('返回结构异常：' + text.slice(0, 200));
+  return typeof c === 'string' ? c : JSON.stringify(c);
+}
+function parseJSON(txt) {
+  if (!txt) throw new Error('AI 没有返回内容');
+  let t = txt.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim();
+  const a = t.indexOf('{'), b = t.lastIndexOf('}');
+  if (a >= 0 && b > a) t = t.slice(a, b + 1);
+  try {
+    return JSON.parse(t);
+  } catch (e1) {
+    // 模型写 LaTeX 时经常忘记转义反斜杠（\frac、\dfrac 里的 \f \d），
+    // 这会让 JSON.parse 直接报 Bad escaped character，先修一遍再解析。
+    const fixed = repairJsonString(t);
+    try {
+      return JSON.parse(fixed);
+    } catch (e2) {
+      throw new Error('AI 返回的 JSON 修不好：' + e2.message);
+    }
+  }
+}
+
+/** 逐字符走一遍字符串，把非法的反斜杠转义补齐，顺手处理裸换行和尾逗号 */
+function repairJsonString(t) {
+  let out = '';
+  let inStr = false;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (!inStr) {
+      if (c === '"') inStr = true;
+      out += c;
+      continue;
+    }
+    if (c === '\\') {
+      const n = t[i + 1];
+      if (n === undefined) { out += '\\\\'; continue; }
+      if (n === 'u') {
+        const hex = t.slice(i + 2, i + 6);
+        if (/^[0-9a-fA-F]{4}$/.test(hex)) { out += '\\u' + hex; i += 5; }
+        else out += '\\\\';
+        continue;
+      }
+      if ('"\\/'.includes(n)) { out += '\\' + n; i++; continue; }
+      if ('bfnrt'.includes(n)) {
+        // \frac \beta \times \nu 这类：反斜杠后面紧跟字母，说明是 LaTeX 命令而不是转义字符
+        if (/[A-Za-z]/.test(t[i + 2] || '')) { out += '\\\\' + n; i++; continue; }
+        out += '\\' + n; i++; continue;
+      }
+      out += '\\\\';                    // 其余非法转义（\d \s \l …）补一个反斜杠
+      continue;
+    }
+    if (c === '"') inStr = false;
+    if (c === '\n') { out += '\\n'; continue; }
+    if (c === '\r') { out += '\\r'; continue; }
+    if (c === '\t') { out += '\\t'; continue; }
+    out += c;
+  }
+  return out.replace(/,\s*([}\]])/g, '$1');
+}
+const SYS_RECOGNIZE_Q = `你是一个严谨的错题录入助手。用户给你的是**题目**的照片（可能多张，同一道题）。
+只识别题目本身，不要输出解析。只输出 JSON，不要任何解释文字：
+{"subject":"科目","question":"题干","tags":["知识点-细分点","..."]}
+要求：
+1. 完整抄录题干；选择题要把每个选项单独一行写成 A. / B. / C. / D.。
+2. 数学公式用 LaTeX 行内写法 $...$；看不清的地方标 [看不清]，绝不编造。
+3. question 必须是字符串，不要把段落拆成数组。
+4. tags 给 2-4 个，格式「大知识点-细分点」，例如「微积分-拉格朗日中值定理」「英语-词汇-熟词僻义」，不要只给「高数」这种笼统标签。
+5. 数学必须转写成规范 LaTeX，不要照抄 OCR 的字符：
+   · 分式用 \\frac{}{} 或 \\dfrac{}{}（长长的上下分式一律这样写，不要写成 a/b）
+   · 积分 \\int、求和 \\sum、极限 \\lim_{x \\to 0}、根号 \\sqrt[n]{}
+   · 上下标 x^{2}、a_{n+1}；希腊字母 \\alpha \\beta \\varphi
+   · 矩阵/分段用 \\begin{cases}…\\end{cases}
+   · 行内公式用 $...$，单独成行的大公式用 $$...$$
+6. JSON 字符串里的反斜杠必须写成双反斜杠（\\\\frac），否则解析会失败。`;
+const SYS_RECOGNIZE_A = `用户给你的是**答案与解析**的照片（可能多张）。只识别解析，不要重新抄题目。
+只输出 JSON，不要任何解释文字：
+{"answer":"最终答案","analysis":"完整解析过程"}
+要求：
+1. **忠实转写**：按原图的书写顺序和思路逐行抄下来，不许自行推导、不许补充、不许润色、不许改写成"更规范"的解法。
+2. 手写里的省略号、箭头、"原式="这类记号照原样保留；一行一行分开写。
+3. 公式用 LaTeX 行内写法 $...$；看不清的地方标 [看不清]，绝不编造。
+4. answer 和 analysis 都必须是字符串，不要把步骤拆成数组或对象。`;
+const SYS_EXAM = `你是一位命题老师。根据用户给的错题（含解析），生成一份同等知识点的变式练习卷。
+只输出 JSON：{"title":"卷子标题","questions":[{"q":"题目","a":"答案与解析"}]}
+要求：题目换了具体数字或情境，但考查同一个知识点和解题方法；难度与原题相当或略高；每题都要有完整答案；不要出现原题原样的内容。`;
+
+/* ============================================================
+   4. 图片
+   ============================================================ */
+function readFile(file) {
+  return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(file); });
+}
+/**
+ * 拍照压缩档位。1500px/0.82 会把公式的上下标、分数线糊掉，
+ * 视觉模型认不出来时就表现为「识别错了」而不是「看不清」。
+ * 清晰度越高，识图模型吃的 token 越多（Qwen-VL 按像素切块算），按需选。
+ */
+const IMG_MODES = {
+  single: { side: 2000, q: 0.90, label: '单题 · 2000px' },
+  page: { side: 2600, q: 0.90, label: '整页 · 2600px' },
+  lite: { side: 1280, q: 0.80, label: '省流量 · 1280px' }
+};
+function imgMode() { return IMG_MODES[S.settings.img] || IMG_MODES.single; }
+function cycleImgMode() {
+  const keys = Object.keys(IMG_MODES);
+  const i = Math.max(0, keys.indexOf(S.settings.img || 'single'));
+  S.settings.img = keys[(i + 1) % keys.length];
+  saveSettings();
+  mount(addHtml());
+  toast('拍照清晰度：' + imgMode().label);
+}
+function compressImage(file, maxSide, quality) {
+  const m = imgMode();
+  maxSide = maxSide || m.side;
+  quality = quality || m.q;
+  return new Promise(async (res, rej) => {
+    try {
+      const dataUrl = await readFile(file);
+      const img = new Image();
+      img.onload = () => {
+        let { width: w, height: h } = img;
+        const scale = Math.min(1, maxSide / Math.max(w, h));
+        w = Math.round(w * scale); h = Math.round(h * scale);
+        const cv = document.createElement('canvas');
+        cv.width = w; cv.height = h;
+        const ctx = cv.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        cv.toBlob(b => res({ blob: b, dataUrl: cv.toDataURL('image/jpeg', quality), w, h }), 'image/jpeg', quality);
+      };
+      img.onerror = () => rej(new Error('图片读取失败'));
+      img.src = dataUrl;
+    } catch (e) { rej(e); }
+  });
+}
+const blobToDataUrl = blob => new Promise((res, rej) => {
+  const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(blob);
+});
+async function saveImage(blob) {
+  const id = uid();
+  await dbPut('images', { id, blob, createdAt: now() });
+  return id;
+}
+async function imgUrl(id) {
+  if (S.imgCache.has(id)) return S.imgCache.get(id);
+  const rec = await dbGet('images', id);
+  if (!rec) return '';
+  const u = URL.createObjectURL(rec.blob);
+  S.imgCache.set(id, u);
+  return u;
+}
+async function hydrateImages(root) {
+  for (const el of $$('[data-img]', root)) {
+    const u = await imgUrl(el.dataset.img);
+    if (u) el.src = u;
+  }
+}
+
+/* ============================================================
+   5. 路由
+   ============================================================ */
+function nav(h) {
+  if (location.hash === h) { render(); }
+  else location.hash = h;
+}
+var ROUTE = { name: 'home' };
+function render() {
+  const raw = (location.hash || '#/').replace(/^#/, '');
+  const p = raw.split('/').filter(Boolean);
+  ROUTE = { name: p[0] || 'home', a: p[1], b: p[2] };
+  try {
+    switch (ROUTE.name) {
+      case 'bank': viewBank(ROUTE.a); break;
+      case 'add': viewAdd(ROUTE.a, null); break;
+      case 'edit': viewAdd(null, ROUTE.a); break;
+      case 'q': viewQ(ROUTE.a); break;
+      case 'review': viewReview(ROUTE.a, ROUTE.b); break;
+      case 'report': viewReport(); break;
+      case 'exam': viewExam(); break;
+      case 'settings': viewSettings(); break;
+      case 'trash': viewTrash(); break;
+      case 'packs': viewPacks(); break;
+      default: viewHome(); break;
+    }
+  } catch (e) {
+    document.getElementById('app').innerHTML = `<div class="page"><div class="empty"><div class="e">😵</div>出错了<br><span class="tiny">${esc(e.message)}</span></div></div>`;
+    console.error(e);
+  }
+  window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', render);
+
+function mount(html) {
+  const app = document.getElementById('app');
+  app.innerHTML = html;
+  hydrateImages(app);
+}
+function tabs(active) {
+  const items = [['home', '🗂', '题库'], ['report', '📊', '报告'], ['exam', '📝', '出卷'], ['settings', '⚙️', '设置']];
+  return `<div class="tabs">${items.map(([k, i, t]) => {
+    const on = (active === k) || (k === 'home' && ['home', 'bank', 'add', 'q'].includes(active));
+    return `<div class="t ${on ? 'on' : ''}" onclick="nav('${k === 'home' ? '#/' : '#/' + k}')"><span class="i">${i}</span><span>${t}</span></div>`;
+  }).join('')}</div>`;
+}
+function hdr(title, back, act) {
+  return `<div class="hdr">
+    ${back ? `<button class="icobtn" onclick="nav('${back}')">‹</button>` : '<div style="width:36px"></div>'}
+    <h1>${esc(title)}</h1>${act || ''}</div>`;
+}
+const fab = (h) => `<button class="fab" onclick="${h}">＋</button>`;
+
+/* ============================================================
+   6. 首页
+   ============================================================ */
+function dueList(bankId) {
+  const t = now();
+  return activeQs(bankId).filter(q => (q.srs ? q.srs.due : 0) <= t);
+}
+function mastery(q) {
+  if (!q.srs || !q.srs.reps) return 0;
+  if (q.srs.ivl >= 21) return 3;
+  if (q.srs.reps >= 2) return 2;
+  return 1;
+}
+function viewHome() {
+  const due = dueList().length;
+  const total = activeQs().length;
+  const done = S.qs.filter(q => q.trashed).length;
+  let body = '';
+  if (!chan('vision').model && !(S.settings.text || {}).apiKey && !localStorage.getItem('cuoti.onboarded')) {
+    body += `<div class="card" style="border:1px solid #d9e4ff;background:#f7faff">
+      <b style="font-size:14px">第一次用？三步就能拍</b>
+      <div class="tiny" style="margin:6px 0 10px;line-height:1.8">
+        ① 去设置填一个<b>能看图的模型</b>（智谱 GLM-4V-Flash 免费）<br>
+        ② 建一个题库，比如「高数」<br>
+        ③ 点右下角 ＋ 拍照，它自动识别成文字
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary sm" onclick="nav('#/settings')">去设置</button>
+        <a class="btn ghost sm" href="intro.html" target="_blank" style="text-decoration:none">看介绍</a>
+        <button class="btn ghost sm" onclick="localStorage.setItem('cuoti.onboarded','1');render()">知道了</button>
+      </div></div>`;
+  }
+  if (due > 0) {
+    body += `<div class="card" style="background:linear-gradient(135deg,#2f6fed,#5b8def);color:#fff">
+      <div class="row"><div class="sp">
+        <div style="font-size:13px;opacity:.85">今天该复习</div>
+        <div style="font-size:26px;font-weight:700;letter-spacing:-.5px">${due} 题</div>
+      </div>
+      <button class="btn" style="background:rgba(255,255,255,.22);color:#fff;backdrop-filter:blur(4px)" onclick="startReview('all','due')">开始 ›</button></div>
+    </div>`;
+  }
+  body += `<div class="card"><div class="row" style="text-align:center">
+      <div class="stat" style="flex:1"><div class="v">${total}</div><div class="k">题库总题数</div></div>
+      <div class="stat" style="flex:1"><div class="v" style="color:#15803d">${done}</div><div class="k">已斩</div></div>
+      <div class="stat" style="flex:1"><div class="v">${total ? Math.round(activeQs().filter(q => mastery(q) >= 2).length / total * 100) : 0}%</div><div class="k">熟练率</div></div>
+    </div></div>`;
+
+  const trashN = S.qs.filter(q => q.trashed).length;
+  const mines = myBanks();
+  if (!mines.length) {
+    body += `<div class="empty"><div class="e">📚</div>还没有题库<br><span class="tiny">题库就像文件夹：数学、英语、期末复习各建一个</span>
+      <div style="margin-top:18px"><button class="btn primary" onclick="newBank()">建第一个题库</button></div></div>`;
+  } else {
+    body += `<div class="row" style="margin:18px 4px 2px"><b style="font-size:13.5px;color:#475569">我的题库</b><div class="sp"></div>
+      <button class="btn sm ghost" onclick="newBank()">＋ 新建</button></div>`;
+    for (const b of mines) {
+      const qs = activeQs(b.id), n = qs.length, m = qs.filter(q => mastery(q) >= 2).length;
+      const pct = n ? Math.round(m / n * 100) : 0;
+      body += `<div class="bank" onclick="nav('#/bank/${b.id}')" oncontextmenu="event.preventDefault();bankMenu('${b.id}')">
+        <div class="em" style="background:${b.color || '#eef3ff'}">${esc(b.icon || '📘')}</div>
+        <div class="sp"><div class="nm">${esc(b.name)}</div><div class="tiny">${n} 题 · 待复习 ${dueList(b.id).length}</div></div>
+        <div class="ring" style="background:conic-gradient(#2f6fed ${pct * 3.6}deg,#eef1f6 0)">
+          <div style="width:30px;height:30px;background:#fff;border-radius:50%;display:grid;place-items:center">${pct}%</div></div>
+        <button class="icobtn" style="width:30px;height:36px;font-size:17px;color:#8b93a1" onclick="event.stopPropagation();bankMenu('${b.id}')">⋯</button>
+      </div>`;
+    }
+  }
+  body += `<div class="row" style="margin:16px 4px;gap:8px">
+    <button class="btn ghost sm" onclick="nav('#/trash')">🗑 回收站 ${trashN ? '(' + trashN + ')' : ''}</button>
+    <button class="btn ghost sm" onclick="nav('#/packs')">📦 题源${sourceBanks().length ? '（' + sourceBanks().length + '）' : ''}</button>
+    <div class="sp"></div>
+  </div>`;
+  mount(hdr('错题集', null, `<button class="icobtn" onclick="nav('#/settings')">⚙️</button>`) + `<div class="page">${body}</div>` + tabs('home') + fab('pickBankForAdd()'));
+}
+
+function pickBankForAdd() {
+  if (!S.banks.length) return newBank(true);
+  openSheet(`<b>记到哪个题库？</b>
+    <div style="margin-top:12px">${S.banks.map(b => `<div class="bank" style="box-shadow:none;border:1px solid #eef1f6" onclick="closeSheet();nav('#/add/${b.id}')">
+      <div class="em" style="background:${b.color || '#eef3ff'}">${esc(b.icon || '📘')}</div><div class="sp"><div class="nm">${esc(b.name)}</div></div><span class="muted">›</span></div>`).join('')}</div>
+    <button class="btn wide ghost" style="margin-top:10px" onclick="closeSheet();newBank(true)">＋ 新建题库</button>`);
+}
+var ASK = null;
+function askText(title, ph, val, cb) {
+  ASK = cb;
+  openSheet(`<b>${esc(title)}</b>
+    <input id="askInp" class="inp" style="margin-top:12px" placeholder="${esc(ph)}" value="${esc(val || '')}"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();askOk()}">
+    <div class="row" style="gap:10px;margin-top:14px">
+      <button class="btn ghost" style="flex:1" onclick="closeSheet()">取消</button>
+      <button class="btn primary" style="flex:1.4" onclick="askOk()">确定</button>
+    </div>`);
+  setTimeout(() => { const i = $('#askInp'); if (i) { i.focus(); i.setSelectionRange(i.value.length, i.value.length); } }, 80);
+}
+function askOk() {
+  const el = $('#askInp');
+  const v = el ? el.value.trim() : '';
+  if (!v) { toast('名字不能为空'); if (el) el.focus(); return; }
+  const cb = ASK; ASK = null;
+  closeSheet();
+  if (cb) cb(v);
+}
+function newBank(goAdd) {
+  askText('新建题库', '例如：高数上、四级词汇', '', async (name) => {
+    const b = { id: uid(), name, icon: '📘', kind: 'mine', createdAt: now() };
+    await dbPut('banks', b);
+    S.banks.push(b);
+    toast('题库已创建');
+    nav(goAdd ? '#/add/' + b.id : '#/bank/' + b.id);
+  });
+}
+
+/* ============================================================
+   7. 题库页
+   ============================================================ */
+var FILTER = { q: '', tag: null };
+function viewBank(bankId) {
+  const b = bankById(bankId);
+  if (!b) return nav('#/');
+  if (FILTER._bank !== bankId) FILTER = { _bank: bankId, q: '', tag: null, limit: 60 };
+  const isSrc = b.kind === 'source';
+  let list = isSrc ? qsOf(bankId) : activeQs(bankId);
+  if (FILTER.q) {
+    const k = FILTER.q.toLowerCase();
+    list = list.filter(q => (q.question + ' ' + q.analysis + ' ' + (q.tags || []).join(' ')).toLowerCase().includes(k));
+  }
+  if (FILTER.tag) list = list.filter(q => (q.tags || []).includes(FILTER.tag));
+  const tags = [...new Set(list.flatMap(q => q.tags || []))];
+  const due = isSrc ? 0 : dueList(bankId).length;
+
+  let body = '';
+  if (isSrc) {
+    body += `<div class="tiny" style="margin:14px 4px">题源用来给你的错题找同类练习，不参与每日复习。</div>`;
+  } else {
+    body += `<div class="row" style="margin-top:14px">
+      <button class="btn primary" style="flex:1" onclick="startReview('${bankId}','due')">今日复习${due ? ' ' + due + ' 题' : ''}</button>
+      <button class="btn ghost" onclick="startReview('${bankId}','order')">顺序</button>
+      <button class="btn ghost" onclick="startReview('${bankId}','random')">随机</button>
+    </div>`;
+  }
+  body += `<div class="row" style="margin-top:10px">
+    <input class="inp" placeholder="搜索题干、解析、标签" value="${esc(FILTER.q)}" oninput="FILTER.q=this.value;viewBank('${bankId}')">
+    ${isSrc ? '' : `<button class="btn primary sm" onclick="nav('#/add/${bankId}')">＋ 录入</button>`}
+  </div>`;
+  if (tags.length) {
+    body += `<div class="tagrow" style="margin-top:10px">${tags.slice(0, 24).map(t =>
+      `<span class="tag ${FILTER.tag === t ? '' : 'g'}" style="cursor:pointer;${FILTER.tag === t ? 'background:#2f6fed;color:#fff' : ''}" onclick="FILTER.tag=${FILTER.tag === t ? 'null' : `'${esc(t).replace(/'/g, "\\'")}'`};viewBank('${bankId}')">${esc(t)}</span>`).join('')}</div>`;
+  }
+  const shown = list.slice(0, FILTER.limit || 60);
+  body += shown.length ? shown.map(q => qItemHtml(q)).join('') :
+    `<div class="empty"><div class="e">📷</div>还没有错题<br><span class="tiny">拍照或从相册上传，AI 帮你把题干和解析填好</span>
+      <div style="margin-top:18px"><button class="btn primary" onclick="nav('#/add/${bankId}')">拍照录第一道</button></div></div>`;
+  if (list.length > shown.length) {
+    body += `<button class="btn ghost wide" style="margin:12px 0" onclick="FILTER.limit=(FILTER.limit||60)+200;viewBank('${bankId}')">显示更多（已显示 ${shown.length} / ${list.length}）</button>`;
+  }
+  mount(hdr(b.name, '#/', `<button class="icobtn" onclick="bankMenu('${b.id}')">⋯</button>`) + `<div class="page">${body}</div>` + tabs('bank') + (isSrc ? '' : fab(`nav('#/add/${bankId}')`)));
+}
+function qItemHtml(q) {
+  const m = mastery(q);
+  const badge = m >= 3 ? '<span class="tag g">熟练</span>' : (q.srs && q.srs.reps ? '<span class="tag o">在学</span>' : '<span class="tag" style="background:#f1f4f9;color:#8b93a1">新</span>');
+  return `<div class="qitem" onclick="nav('#/q/${q.id}')">
+    <div class="row" style="align-items:flex-start"><div class="sp">
+      <div class="qt">${mathHtml(q.question.slice(0, 120))}</div>
+    </div>${q.imgs && q.imgs.length ? '<span class="tiny">🖼</span>' : ''}</div>
+    <div class="tagrow">${badge}${(q.tags || []).slice(0, 3).map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
+  </div>`;
+}
+function bankMenu(id) {
+  const b = bankById(id); if (!b) return;
+  const n = qsOf(id).length;
+  const isSrc = b.kind === 'source';
+  openSheet(`<b>${esc(b.name)}</b>
+    <div class="tiny" style="margin:4px 0 14px">${n} 题${isSrc ? ' · 题源（用来找同类题）' : ''}</div>
+    <div style="display:grid;gap:10px">
+      ${isSrc ? `<button class="btn ghost wide" onclick="closeSheet();nav('#/bank/${id}')">浏览题目</button>`
+              : `<button class="btn ghost wide" onclick="closeSheet();renameBank('${id}')">重命名</button>
+                 <button class="btn ghost wide" onclick="closeSheet();examFromBank('${id}')">用这个题库出卷</button>`}
+      <button class="btn ghost wide" onclick="closeSheet();nav('#/trash')">打开回收站</button>
+      ${isSrc ? `<button class="btn danger wide" onclick="closeSheet();removeSource('${id}')">移除这个题源</button>`
+              : `<button class="btn danger wide" onclick="closeSheet();delBank('${id}')">删除题库</button>`}
+    </div>`);
+}
+function renameBank(id) {
+  const b = bankById(id); if (!b) return;
+  askText('重命名题库', '新名称', b.name, async (n) => {
+    b.name = n; await dbPut('banks', b); render(); toast('已重命名');
+  });
+}
+async function delBank(id) {
+  const n = activeQs(id).length;
+  if (!confirm(`删除题库「${bankById(id).name}」？\n其中 ${n} 道题会一起进回收站（可恢复）。`)) return;
+  for (const q of S.qs.filter(q => q.bankId === id && !q.trashed)) { q.trashed = true; q.deletedAt = now(); await dbPut('questions', q); }
+  S.banks = S.banks.filter(b => b.id !== id); await dbDel('banks', id);
+  toast('题库已删除'); nav('#/');
+}
+
+/* ============================================================
+   8. 录入 / 编辑
+   ============================================================ */
+var ADD = {};
+async function viewAdd(bankId, editId) {
+  const key = editId ? 'e:' + editId : 'n:' + (bankId || '');
+  if (ADD.key !== key) {
+    ADD = { key, bankId: bankId || (S.banks[0] && S.banks[0].id), editingId: editId || null,
+      question: '', analysis: '', tags: [], qImgs: [], aImgs: [], busy: '', tagIn: '' };
+    if (editId) {
+      const q = qById(editId);
+      if (!q) return nav('#/');
+      Object.assign(ADD, { bankId: q.bankId, question: q.question, analysis: q.analysis || '', tags: (q.tags || []).slice() });
+      for (const id of (q.imgs || [])) { const rec = await dbGet('images', id); if (rec) ADD.qImgs.push({ id, dataUrl: await blobToDataUrl(rec.blob) }); }
+      for (const id of (q.solImgs || [])) { const rec = await dbGet('images', id); if (rec) ADD.aImgs.push({ id, dataUrl: await blobToDataUrl(rec.blob) }); }
+    }
+  }
+  if (!S.banks.find(b => b.id === ADD.bankId)) return nav('#/');
+  mount(addHtml());
+}
+function imgsBlock(which) {
+  const list = which === 'q' ? ADD.qImgs : ADD.aImgs;
+  const tile = (icon, label, cap, mul) => `<label class="addimg" style="display:flex;flex-direction:column;gap:2px;font-size:11.5px;color:#8b93a1;cursor:pointer">
+    <span style="font-size:22px">${icon}</span><span>${label}</span>
+    <input type="file" accept="image/*" ${cap ? 'capture="environment"' : ''} ${mul ? 'multiple' : ''} hidden onchange="pickImgs(this,'${which}')"></label>`;
+  return `<div class="imgs">
+    ${list.map((im, i) => `<div class="thumb"><img src="${im.dataUrl}" onclick="openCrop('${which}',${i})"><div class="x" onclick="rmImg('${which}',${i})">✕</div><div class="cr" onclick="event.stopPropagation();openCrop('${which}',${i})">✂︎</div></div>`).join('')}
+    ${list.length < 4 ? tile('📷', '拍照', 1, 0) + tile('🖼', '相册', 0, 1) : ''}
+  </div>`;
+}
+function addHtml() {
+  const busy = ADD.busy;
+  const allTags = [...new Set(S.qs.filter(q => isMineBank(bankById(q.bankId))).flatMap(q => q.tags || []))];
+  const sug = ADD.tagIn
+    ? allTags.filter(t => t.includes(ADD.tagIn) && !ADD.tags.includes(t)).slice(0, 10)
+    : allTags.filter(t => !ADD.tags.includes(t)).sort((a, b) => (b.split('-').length - a.split('-').length)).slice(0, 8);
+  const title = ADD.editingId ? '编辑错题' : '记一道错题';
+  const recog = (w) => busy === 'recog-' + w ? '<span class="loading"></span> 识别中…' : (w === 'q' ? '🤖 识别题干' : '🤖 识别解析');
+  let body = '';
+
+  body += `<div class="card">
+    <div class="row"><b style="font-size:13.5px">① 题目照片</b><div class="sp"></div>
+      <span class="tiny">${ADD.qImgs.length ? ADD.qImgs.length + ' 张' : '可多张'}</span></div>
+    ${imgsBlock('q')}
+    <div class="tiny" style="margin-top:6px">拍照压缩：<b onclick="cycleImgMode()" style="cursor:pointer;color:#2f6fed">${esc(imgMode().label)} ⇄</b> · 整页教材就切「整页」，公式更清楚</div>
+    <button class="btn primary sm wide" style="margin-top:10px" ${busy || !ADD.qImgs.length ? 'disabled' : ''} onclick="aiRecognize('q')">${recog('q')}</button>
+    <div class="field" style="margin-top:12px"><label>题干</label>
+      <textarea class="inp" id="fQ" rows="6" placeholder="题目内容；选择题把 A/B/C/D 也写上…" oninput="ADD.question=this.value">${esc(ADD.question)}</textarea></div>
+    <div class="field"><label>标签（「大知识点-细分点」，越细越好）</label>
+      <div class="chipbox" onclick="document.getElementById('fTag').focus()">
+        ${ADD.tags.map((t, i) => `<span class="chip" onclick="editTagNote('${esc(t).replace(/'/g, '')}')">${esc(t)}<b onclick="event.stopPropagation();rmTag(${i})">✕</b></span>`).join('')}
+        <input id="fTag" placeholder="高数-定积分-换元积分法" value="${esc(ADD.tagIn || '')}"
+          oninput="ADD.tagIn=this.value;viewAddRefresh()" onkeydown="tagKey(event)">
+        <button class="chipadd" onclick="event.stopPropagation();commitTag(false)" title="添加标签">＋</button>
+      </div>
+      <div class="sug" id="tagSug">${sug.map(t => `<span class="s" onclick="addTag('${esc(t).replace(/'/g, "\\'")}')">${esc(t)}</span>`).join('')}</div>
+      <div class="tiny" style="margin-top:6px">自己的错题标签自己写；斩题和找同类题都靠它。<b>点标签可以写口诀。</b></div>
+      ${ADD.tags.filter(t => tagNote(t)).map(t => `<div class="tagnote">🧠 <b>${esc(t)}</b>：${esc(tagNote(t))}</div>`).join('')}
+    </div>
+  </div>`;
+
+  body += `<div class="card">
+    <div class="row"><b style="font-size:13.5px">② 解析照片</b><div class="sp"></div>
+      <span class="tiny">${ADD.aImgs.length ? ADD.aImgs.length + ' 张' : '没有就跳过'}</span></div>
+    <div class="tiny" style="margin:2px 0 6px">题目和解析分开拍，识别不会串；只有题目没有解析，就拍完题目点下面的「AI 写解析」。</div>
+    ${imgsBlock('a')}
+    <button class="btn primary sm wide" style="margin-top:10px" ${busy || !ADD.aImgs.length ? 'disabled' : ''} onclick="aiRecognize('a')">${recog('a')}</button>
+    <div class="field" style="margin-top:12px"><label>解析 / 答案</label>
+      <textarea class="inp" id="fA" rows="7" placeholder="解法、答案、易错点…" oninput="ADD.analysis=this.value">${esc(ADD.analysis)}</textarea>
+      <button class="btn ghost sm" style="margin-top:8px" ${busy ? 'disabled' : ''} onclick="aiSolve()">${busy === 'solve' ? '<span class="loading dark"></span> 思考中…' : '🤖 让 AI 写解析'}</button></div>
+  </div>`;
+
+  body += `<button class="btn primary wide" style="margin:6px 0 24px" ${busy ? 'disabled' : ''} onclick="saveQ()">${ADD.editingId ? '保存修改' : '收进题库'}</button>`;
+  return hdr(title, ADD.editingId ? '#/q/' + ADD.editingId : '#/bank/' + ADD.bankId, null) + `<div class="page">${body}</div>`;
+}
+function viewAddRefresh() {
+  const box = document.getElementById('tagSug');
+  if (!box) return;
+  const allTags = [...new Set(S.qs.filter(q => isMineBank(bankById(q.bankId))).flatMap(q => q.tags || []))];
+  const list = ADD.tagIn
+    ? allTags.filter(t => t.includes(ADD.tagIn) && !ADD.tags.includes(t)).slice(0, 10)
+    : allTags.filter(t => !ADD.tags.includes(t)).sort((a, b) => (b.split('-').length - a.split('-').length)).slice(0, 8);
+  box.innerHTML = list.map(t => `<span class="s" onclick="addTag('${esc(t).replace(/'/g, "\\'")}')">${esc(t)}</span>`).join('');
+}
+
+/* ---------- 图片裁剪 ---------- */
+var CROP = null;
+function openCrop(which, i) {
+  const list = which === 'q' ? ADD.qImgs : ADD.aImgs;
+  const im = list[i];
+  if (!im) return;
+  const img = new Image();
+  img.onload = () => { CROP = { which, i, img, rect: null, start: null }; mountCrop(); };
+  img.onerror = () => toast('图片打不开');
+  img.src = im.dataUrl;
+}
+
+/** 自动找题目区域：Otsu 二值化 → 行投影切块 → 取中线所在的块 → 收缩到列范围 */
+function autoDetectRect(img) {
+  const target = 520;
+  const sc = Math.min(1, target / Math.max(img.naturalWidth, img.naturalHeight));
+  const w = Math.max(8, Math.round(img.naturalWidth * sc));
+  const h = Math.max(8, Math.round(img.naturalHeight * sc));
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  const ctx = cv.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(img, 0, 0, w, h);
+  const d = ctx.getImageData(0, 0, w, h).data;
+  const gray = new Uint8ClampedArray(w * h);
+  const hist = new Array(256).fill(0);
+  let sum = 0;
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
+    const g = (d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114) | 0;
+    gray[p] = g; sum += g; hist[g]++;
+  }
+  const mean = sum / (w * h);
+  const darkInk = mean > 118;                    // 白纸黑字：比阈值暗的算字
+
+  // Otsu 阈值
+  const total = gray.length;
+  let sumAll = 0;
+  for (let i = 0; i < 256; i++) sumAll += i * hist[i];
+  let sumB = 0, wB = 0, best = -1, thr = 128;
+  for (let t = 0; t < 256; t++) {
+    wB += hist[t];
+    if (!wB) continue;
+    const wF = total - wB;
+    if (!wF) break;
+    sumB += t * hist[t];
+    const mB = sumB / wB, mF = (sumAll - sumB) / wF;
+    const between = wB * wF * (mB - mF) * (mB - mF);
+    if (between > best) { best = between; thr = t; }
+  }
+  if (best <= 0) thr = mean;
+  const isInk = g => darkInk ? g < thr : g > thr;
+
+  // 行投影
+  const rowInk = new Int32Array(h);
+  for (let y = 0; y < h; y++) {
+    const off = y * w; let c = 0;
+    for (let x = 0; x < w; x++) if (isInk(gray[off + x])) c++;
+    rowInk[y] = c;
+  }
+  const rowMin = Math.max(2, w * 0.004);
+  const buildBands = (ratio) => {
+    const gapMerge = Math.max(2, Math.round(h * ratio));
+    const out = [];
+    let st = -1, lastInk = -1;
+    for (let y = 0; y < h; y++) {
+      if (rowInk[y] >= rowMin) {
+        if (st < 0) st = y;
+        lastInk = y;
+      } else if (st >= 0 && y - lastInk > gapMerge) {
+        out.push([st, lastInk]); st = -1;
+      }
+    }
+    if (st >= 0) out.push([st, lastInk]);
+    return out;
+  };
+  // 空白行少（密排的整页）时逐步放大切分间距，尽量切出“一道题”的块
+  let bands = buildBands(0.013);
+  for (const r of [0.026, 0.045]) {
+    if (bands.length > 1) break;
+    const alt = buildBands(r);
+    if (alt.length > 1) bands = alt;
+  }
+  if (!bands.length) return null;
+
+  // 取包含中线的块；没有就取最大的
+  const cy = h / 2;
+  let pick = bands.find(b => cy >= b[0] && cy <= b[1]);
+  if (!pick) pick = bands.slice().sort((a, b) => (b[1] - b[0]) - (a[1] - a[0]))[0];
+  const y0 = pick[0], y1 = pick[1];
+
+  // 列范围
+  let x0 = w, x1 = -1;
+  for (let y = y0; y <= y1; y++) {
+    const off = y * w;
+    for (let x = 0; x < w; x++) {
+      if (isInk(gray[off + x])) { if (x < x0) x0 = x; if (x > x1) x1 = x; }
+    }
+  }
+  if (x1 <= x0) return null;
+
+  const padX = w * 0.015, padY = h * 0.012;
+  return {
+    x0: Math.max(0, x0 - padX), x1: Math.min(w, x1 + padX),
+    y0: Math.max(0, y0 - padY), y1: Math.min(h, y1 + padY),
+    w, h
+  };
+}
+
+/** 把自动框选结果套到当前裁剪画布上 */
+function autoCropBox() {
+  if (!CROP) return;
+  const cv = document.getElementById('cropCv');
+  if (!cv) return;
+  const r = autoDetectRect(CROP.img);
+  if (!r) { toast('没找到明显的内容边界，手动框一下'); return; }
+  const k = cv.width / r.w;
+  CROP.rect = {
+    x: r.x0 * k, y: r.y0 * k,
+    w: (r.x1 - r.x0) * k, h: (r.y1 - r.y0) * k
+  };
+  cropDraw();
+}
+
+function mountCrop() {
+  let ov = document.getElementById('cropOv');
+  if (!ov) { ov = document.createElement('div'); ov.id = 'cropOv'; document.body.appendChild(ov); }
+  ov.innerHTML = `<div class="cropbar">已自动框出题目，可拖动重选<br><span style="opacity:.6">方向不对就点下面的旋转</span></div>
+    <div class="croprot"><button class="btn ghost sm" onclick="rotateCrop(-90)">↺ 左转</button>
+      <button class="btn ghost sm" onclick="rotateCrop(90)">↻ 右转</button>
+      <button class="btn ghost sm" onclick="rotateCrop(180)">⇅ 倒转</button></div>
+    <canvas id="cropCv"></canvas>
+    <div class="cropact">
+      <button class="btn ghost" onclick="closeCrop()">取消</button>
+      <button class="btn ghost" onclick="autoCropBox()">自动框</button>
+      <button class="btn primary" onclick="applyCrop()">裁剪</button>
+    </div>`;
+  ov.classList.add('on');
+  const cv = document.getElementById('cropCv');
+  const maxW = Math.min(window.innerWidth - 32, 860);
+  const maxH = window.innerHeight * 0.6;
+  const sc = Math.min(maxW / CROP.img.naturalWidth, maxH / CROP.img.naturalHeight, 1);
+  cv.width = Math.round(CROP.img.naturalWidth * sc);
+  cv.height = Math.round(CROP.img.naturalHeight * sc);
+  cv.style.width = cv.width + 'px';
+  cv.style.height = cv.height + 'px';
+  cropDraw();
+  if (!CROP.rect) autoCropBox();
+  const pos = e => {
+    const r = cv.getBoundingClientRect();
+    return {
+      x: Math.max(0, Math.min(cv.width, e.clientX - r.left)),
+      y: Math.max(0, Math.min(cv.height, e.clientY - r.top))
+    };
+  };
+  cv.addEventListener('pointerdown', e => { e.preventDefault(); CROP.start = pos(e); CROP.rect = null; cropDraw(); });
+  cv.addEventListener('pointermove', e => {
+    if (!CROP.start) return;
+    e.preventDefault();
+    const p = pos(e);
+    CROP.rect = {
+      x: Math.min(CROP.start.x, p.x), y: Math.min(CROP.start.y, p.y),
+      w: Math.abs(p.x - CROP.start.x), h: Math.abs(p.y - CROP.start.y)
+    };
+    cropDraw();
+  });
+  cv.addEventListener('pointerup', e => { e.preventDefault(); CROP.start = null; cropDraw(); });
+  cv.addEventListener('pointercancel', () => { CROP.start = null; cropDraw(); });
+}
+function cropDraw() {
+  const cv = document.getElementById('cropCv');
+  if (!cv || !CROP) return;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.drawImage(CROP.img, 0, 0, cv.width, cv.height);
+  const r = CROP.rect;
+  ctx.fillStyle = 'rgba(8,12,20,.58)';
+  if (r) {
+    ctx.fillRect(0, 0, cv.width, r.y);
+    ctx.fillRect(0, r.y + r.h, cv.width, cv.height - r.y - r.h);
+    ctx.fillRect(0, r.y, r.x, r.h);
+    ctx.fillRect(r.x + r.w, r.y, cv.width - r.x - r.w, r.h);
+    ctx.strokeStyle = '#2f6fed'; ctx.lineWidth = 2;
+    ctx.strokeRect(r.x + 1, r.y + 1, Math.max(0, r.w - 2), Math.max(0, r.h - 2));
+  } else {
+    ctx.fillRect(0, 0, cv.width, cv.height);
+  }
+  if (CROP.start) {
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1;
+    ctx.strokeRect(CROP.start.x, CROP.start.y, 1, 1);
+  }
+}
+async function applyCrop() {
+  if (!CROP || !CROP.rect) return toast('先在图上拖一个框');
+  const r = CROP.rect;
+  if (r.w < 30 || r.h < 30) return toast('框太小了，重新拖一个大一点的');
+  const img = CROP.img;
+  const cvEl = document.getElementById('cropCv');
+  const sc = img.naturalWidth / cvEl.width;
+  const sx = r.x * sc, sy = r.y * sc, sw = r.w * sc, sh = r.h * sc;
+  const cap = 2400;
+  const k = Math.min(1, cap / Math.max(sw, sh));
+  const cv = document.createElement('canvas');
+  cv.width = Math.max(1, Math.round(sw * k));
+  cv.height = Math.max(1, Math.round(sh * k));
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cv.width, cv.height);
+  const blob = await new Promise(res => cv.toBlob(res, 'image/jpeg', 0.92));
+  const dataUrl = cv.toDataURL('image/jpeg', 0.92);
+  const which = CROP.which, idx = CROP.i;
+  const list = which === 'q' ? ADD.qImgs : ADD.aImgs;
+  list[idx] = { blob, dataUrl };
+  closeCrop();
+  mount(addHtml());
+  toast('已裁剪，可以点「识别题干」了');
+  const target = which === 'q' ? ADD.question : ADD.analysis;
+  if (!target.trim() && chan('vision').model && !ADD.busy) aiRecognize(which);
+}
+
+/** 把当前裁剪图旋转 90/180 度后重新框选 */
+function rotateCrop(deg) {
+  if (!CROP) return;
+  const img = CROP.img;
+  const swap = Math.abs(deg) % 180 === 90;
+  const cv = document.createElement('canvas');
+  cv.width = swap ? img.naturalHeight : img.naturalWidth;
+  cv.height = swap ? img.naturalWidth : img.naturalHeight;
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.translate(cv.width / 2, cv.height / 2);
+  ctx.rotate(deg * Math.PI / 180);
+  ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+  const url = cv.toDataURL('image/jpeg', 0.92);
+  const nimg = new Image();
+  nimg.onload = () => { CROP.img = nimg; CROP.rect = null; mountCrop(); };
+  nimg.src = url;
+}
+
+function closeCrop() {
+  const ov = document.getElementById('cropOv');
+  if (ov) { ov.classList.remove('on'); ov.innerHTML = ''; }
+  CROP = null;
+}
+
+/* ---------- 标签口诀 ---------- */
+async function loadTagNotes() {
+  const rec = await dbGet('kv', 'tagnotes');
+  S.tagNotes = (rec && rec.v) || {};
+}
+function tagNote(t) { return (S.tagNotes || {})[t] || ''; }
+function editTagNote(tag) {
+  if (!S.tagNotes) S.tagNotes = {};
+  askText('给「' + tag + '」写一句口诀', '例如：三条件缺一不可，端点不等于', tagNote(tag), async (v) => {
+    S.tagNotes = S.tagNotes || {};
+    S.tagNotes[tag] = v;
+    try {
+      await dbPut('kv', { k: 'tagnotes', v: S.tagNotes });
+      toast('口诀已保存');
+    } catch (e) {
+      toast('口诀保存失败：' + e.message);
+    }
+    render();
+  });
+}
+
+async function pickImgs(input, which) {
+  which = which || 'q';
+  const list = which === 'q' ? ADD.qImgs : ADD.aImgs;
+  const files = Array.from(input.files || []);
+  input.value = '';
+  for (const f of files) {
+    if (list.length >= 4) { toast('最多 4 张'); break; }
+    try {
+      const c = await compressImage(f);
+      list.push({ blob: c.blob, dataUrl: c.dataUrl });
+    } catch (e) { toast('图片处理失败'); }
+  }
+  mount(addHtml());
+  // 先让用户裁剪，裁剪确认后才识别——避免把整页图丢给模型白白烧 token
+  if (list.length) openCrop(which, list.length - 1);
+}
+function rmImg(which, i) {
+  const list = which === 'q' ? ADD.qImgs : ADD.aImgs;
+  list.splice(i, 1);
+  mount(addHtml());
+}
+function addTag(t) {
+  t = (t || '').trim();
+  if (!t) return;
+  if (ADD.tags.includes(t)) return toast('已有这个标签');
+  if (t.length <= 2) toast('标签太笼统了，建议写成「高数-二重积分」');
+  ADD.tags.push(t); ADD.tagIn = ''; mount(addHtml());
+  const inp = document.getElementById('fTag'); if (inp) inp.focus();
+}
+function rmTag(i) { ADD.tags.splice(i, 1); mount(addHtml()); }
+function tagKey(e) {
+  // 中文输入法还在组字时不要抢回车，否则拼音会被吞掉、光标跳去别处
+  if (e.isComposing || e.keyCode === 229) return;
+  if (e.key === 'Enter' || e.key === ',' || e.key === '，') {
+    e.preventDefault();
+    e.stopPropagation();
+    commitTag(false);
+  } else if (e.key === 'Backspace' && !e.target.value && ADD.tags.length) {
+    rmTag(ADD.tags.length - 1);
+  }
+}
+/** 提交当前输入框里的文字；quiet=true 时为空不提示（失焦场景） */
+function commitTag(quiet) {
+  if (!ADD.tagIn) { if (!quiet) toast('先输入一个标签'); return; }
+  addTag(ADD.tagIn);
+}
+function toText(v) {
+  if (v == null) return '';
+  if (typeof v === 'string') return v;
+  if (typeof v === 'number') return String(v);
+  if (Array.isArray(v)) return v.map(toText).filter(Boolean).join('\n');
+  if (typeof v === 'object') return Object.values(v).map(toText).filter(Boolean).join('\n');
+  return String(v);
+}
+async function aiRecognize(which) {
+  which = which || 'q';
+  const list = which === 'q' ? ADD.qImgs : ADD.aImgs;
+  if (!chan('vision').model) return toast('还没配识图模型，去「设置 ②」里填，或手动输入');
+  if (!list.length) return toast('先加一张照片');
+  ADD.busy = 'recog-' + which; mount(addHtml());
+  try {
+    const sys = which === 'q' ? SYS_RECOGNIZE_Q : SYS_RECOGNIZE_A;
+    const mk = (fmt) => {
+      const content = [{ type: 'text', text: which === 'q' ? '识别这些照片里的题目。' : '识别这些照片里的答案和解析。' }];
+      list.forEach(im => content.push({ type: 'image_url', image_url: { url: fmt === 'raw' ? im.dataUrl.split(',')[1] : im.dataUrl } }));
+      return aiChat([{ role: 'system', content: sys }, { role: 'user', content }], { channel: 'vision' });
+    };
+    let out;
+    try { out = await mk('data'); }
+    catch (e1) {
+      if (!/400|422|image|url|invalid/i.test(e1.message)) throw e1;
+      out = await mk('raw');
+    }
+    const j = parseJSON(out);
+    if (which === 'q') {
+      ADD.question = toText(j.question) || ADD.question;
+      if (Array.isArray(j.tags)) for (const t of j.tags) { const v = toText(t); if (v && !ADD.tags.includes(v)) ADD.tags.push(v); }
+    } else {
+      const a = [toText(j.answer), toText(j.analysis)].filter(Boolean);
+      ADD.analysis = a.join('\n\n') || ADD.analysis;
+    }
+    toast('识别完成，检查一下再保存');
+  } catch (e) { toast('识别失败：' + e.message); }
+  ADD.busy = ''; mount(addHtml());
+}
+async function aiSolve() {
+  if (!ADD.question.trim()) return toast('先有题干');
+  ADD.busy = 'solve'; mount(addHtml());
+  try {
+    const out = await aiChat([
+      { role: 'system', content: '你是耐心的老师。给出这道题的完整解析：答案、关键步骤、为什么这样想、常见错误。分点写，中文，数学公式用 $...$。不要输出多余寒暄。' },
+      { role: 'user', content: '题目：\n' + ADD.question + (ADD.analysis ? '\n\n已有的部分解析（可参考完善）：\n' + ADD.analysis : '') }
+    ]);
+    ADD.analysis = out.trim();
+    toast('解析已生成');
+  } catch (e) { toast('失败：' + e.message); }
+  ADD.busy = ''; mount(addHtml());
+}
+async function saveQ() {
+  if (!ADD.question.trim()) return toast('题干不能为空');
+  ADD.question = normalizeMathText(ADD.question);
+  ADD.analysis = normalizeMathText(ADD.analysis);
+  if (!S.banks.find(b => b.id === ADD.bankId)) return toast('题库不存在');
+  ADD.busy = 'save'; mount(addHtml());
+  try {
+    const dump = async (list) => {
+      const out = [];
+      for (const im of list) {
+        if (im.id) out.push(im.id);
+        else if (im.blob) out.push(await saveImage(im.blob));
+      }
+      return out;
+    };
+    const imgs = await dump(ADD.qImgs);
+    const solImgs = await dump(ADD.aImgs);
+    if (ADD.editingId) {
+      const q = qById(ADD.editingId);
+      Object.assign(q, { question: ADD.question, analysis: ADD.analysis, tags: ADD.tags, imgs, solImgs, updatedAt: now() });
+      await dbPut('questions', q);
+      toast('已保存');
+      ADD = {};
+      nav('#/q/' + q.id);
+    } else {
+      const q = { id: uid(), bankId: ADD.bankId, question: ADD.question, analysis: ADD.analysis, tags: ADD.tags,
+        imgs, solImgs, origin: 'user', createdAt: now(), updatedAt: now(), trashed: false,
+        srs: { ease: 2.5, ivl: 0, reps: 0, lapses: 0, due: 0 } };
+      await dbPut('questions', q);
+      S.qs.unshift(q);
+      toast('已收进题库');
+      const bid = ADD.bankId;
+      ADD = {};
+      nav('#/bank/' + bid);
+    }
+  } catch (e) {
+    ADD.busy = ''; mount(addHtml());
+    toast('保存失败：' + e.message);
+  }
+}
+
+/* ============================================================
+   9. 题目详情
+   ============================================================ */
+function viewQ(id) {
+  const q = qById(id);
+  if (!q) return nav('#/');
+  const b = bankById(q.bankId) || { name: '题库' };
+  const st = q.srs || {};
+  let body = '';
+  if (q.imgs && q.imgs.length) {
+    body += `<div class="imgs" style="margin-top:12px">${q.imgs.map(i => `<div class="thumb" style="width:100%;height:auto;max-height:40vh" onclick="zoomImg('${i}')"><img data-img="${i}" style="width:100%;height:auto;object-fit:contain"></div>`).join('')}</div>`;
+  }
+  body += `<div class="qcard"><div class="qtext">${mathHtml(q.question)}</div></div>`;
+  body += `<div class="card"><div class="row" style="margin-bottom:8px"><b style="font-size:13.5px">解析</b><div class="sp"></div>
+      <button class="btn ghost sm" onclick="aiSolveQ('${q.id}')">AI 重写</button></div>
+    ${(q.solImgs || []).length ? `<div class="imgs" style="margin-bottom:10px">${q.solImgs.map(i => `<div class="thumb" style="width:100%;height:auto;max-height:38vh" onclick="zoomImg('${i}')"><img data-img="${i}" style="width:100%;height:auto;object-fit:contain"></div>`).join('')}</div>` : ''}
+    <div class="ans">${mathHtml(q.analysis || '（还没有解析）')}</div></div>`;
+  body += `<div class="tagrow" style="margin:0 4px">${(q.tags || []).map(t => `<span class="tag" onclick="editTagNote('${esc(t).replace(/'/g, '')}')">${esc(t)}</span>`).join('') || '<span class="tiny">没有标签</span>'}</div>`;
+  body += (q.tags || []).filter(t => tagNote(t)).map(t => `<div class="tagnote">🧠 <b>${esc(t)}</b>：${esc(tagNote(t))}</div>`).join('');
+  body += `<div class="card" style="margin-top:14px"><div class="row tiny">
+      <span>${esc(b.name)}</span><div class="sp"></div><span>复习 ${st.reps || 0} 次 · 遗忘 ${st.lapses || 0} 次</span></div>
+    <div class="tiny" style="margin-top:6px">${st.due ? '下次复习：' + (st.due <= now() ? '现在' : fmtDate(st.due)) : '还没复习过'}</div></div>`;
+  body += `<div class="row" style="gap:8px;margin-bottom:8px">
+      <button class="btn ghost" style="flex:1" onclick="nav('#/edit/${q.id}')">编辑</button>
+      <button class="btn danger" style="flex:1" onclick="slash('${q.id}')">🗡 斩题</button></div>
+    <button class="btn wide" style="background:#eef3ff;color:#2f6fed;margin-bottom:26px" onclick="findSimilar('${q.id}')">🔍 从题源找同类题练</button>`;
+  mount(hdr(b.name, '#/bank/' + q.bankId, `<button class="icobtn" onclick="refixQ('${q.id}')" title="重排格式">↻</button>`) + `<div class="page">${body}</div>` + tabs('q'));
+}
+async function aiSolveQ(id) {
+  const q = qById(id);
+  toast('AI 正在写解析…');
+  try {
+    const out = await aiChat([
+      { role: 'system', content: '你是耐心的老师。给出这道题的完整解析：答案、关键步骤、为什么这样想、常见错误。分点写，中文，公式用 $...$。' },
+      { role: 'user', content: '题目：\n' + q.question + (q.analysis ? '\n\n已有解析（可参考完善）：\n' + q.analysis : '') }
+    ]);
+    q.analysis = out.trim(); q.updatedAt = now();
+    await dbPut('questions', q);
+    render(); toast('解析已更新');
+  } catch (e) { toast('失败：' + e.message); }
+}
+function zoomImg(id) {
+  openSheet(`<img data-img="${id}" style="width:100%;border-radius:12px">`);
+  hydrateImages($('#sheetBox'));
+}
+async function delQ(id) {
+  const q = qById(id);
+  if (!confirm('把这道题放进回收站？15 天内可以恢复。')) return;
+  q.trashed = true; q.deletedAt = now();
+  await dbPut('questions', q);
+  toast('已进回收站', { label: '撤销', fn: async () => { q.trashed = false; await dbPut('questions', q); render(); } });
+  nav('#/bank/' + q.bankId);
+}
+/* ============================================================
+   10. 复习（间隔重复）
+   ============================================================ */
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
+function srsGrade(q, ok) {
+  const s = q.srs || (q.srs = { ease: 2.5, ivl: 0, reps: 0, lapses: 0, due: 0 });
+  s.last = now();
+  if (ok) {
+    s.reps++;
+    if (s.reps === 1) s.ivl = 1;
+    else if (s.reps === 2) s.ivl = 3;
+    else s.ivl = Math.max(4, Math.round(s.ivl * (s.ease || 2.5)));
+    s.ease = Math.min(2.8, (s.ease || 2.5) + 0.05);
+    s.due = now() + s.ivl * DAY;
+  } else {
+    s.lapses++;
+    s.reps = 0;
+    s.ivl = 0;
+    s.ease = Math.max(1.3, (s.ease || 2.5) - 0.2);
+    s.due = now() + 10 * 60000;
+  }
+  return s;
+}
+function startReview(bankId, mode) {
+  const bid = (!bankId || bankId === 'all') ? null : bankId;
+  let list;
+  if (mode === 'due') list = dueList(bid);
+  else list = activeQs(bid);
+  list = list.slice();
+  if (!list.length) { toast(mode === 'due' ? '今天没有要复习的题 🎉' : '这个题库还没有题'); return; }
+  let capped = false;
+  if (mode === 'due' && list.length > 50) { capped = true; list = list.slice(0, 50); }
+  if (mode === 'random') shuffle(list);
+  if (mode === 'order') list.sort((a, b) => a.createdAt - b.createdAt);
+  S.slashSkip = false;
+  S.review = { key: (bankId || 'all') + '/' + mode, bankId: bid, mode, list, idx: 0, show: false, ok: 0, bad: 0, done: false, capped };
+  const target = `#/review/${bankId || 'all'}/${mode}`;
+  if (location.hash === target) render(); else nav(target);
+}
+function viewReview(bankId, mode) {
+  if (bankId === 'similar') {
+    if (!S.review || S.review.mode !== 'similar') { nav('#/'); return; }
+  } else {
+    const key = (bankId || 'all') + '/' + mode;
+    if (!S.review || S.review.key !== key) { startReview(bankId, mode); return; }
+  }
+  const r = S.review;
+  if (r.done) {
+    const body = `<div class="empty" style="padding-top:70px"><div class="e">🎉</div>
+      <div style="font-size:19px;font-weight:700;color:#16202c">这一轮刷完了</div>
+      <div class="muted" style="margin-top:6px">会了 ${r.ok} 题 · 没会 ${r.bad} 题</div>
+      ${r.capped ? '<div class="tiny" style="margin-top:4px">今天先刷了 50 题，剩下的明天再来</div>' : ''}
+      <div style="margin-top:22px;display:flex;gap:10px;justify-content:center">
+        <button class="btn ghost" onclick="S.review=null;nav('#/')">回题库</button>
+        ${r.mode === 'similar' ? `<button class="btn primary" onclick="S.review=null;nav('#/')">回题库</button>` : `<button class="btn primary" onclick="S.review=null;startReview('${bankId}','${mode}')">再来一轮</button>`}
+      </div></div>`;
+    return mount(hdr('复习完成', '#/', null) + body + tabs('home'));
+  }
+  const q = r.list[r.idx];
+  if (!q) { r.done = true; return render(); }
+  const pct = Math.round(r.idx / r.list.length * 100);
+  let body = `<div style="padding:14px 16px 0">
+    <div class="row tiny"><span>${r.idx + 1} / ${r.list.length}</span><div class="sp"></div><span>${mode === 'due' ? '今日复习' : mode === 'random' ? '随机' : '顺序'}</span></div>
+    <div class="bar" style="margin-top:8px"><i style="width:${pct}%"></i></div></div>`;
+  body += `<div class="page"><div class="qcard">
+    ${q.imgs && q.imgs.length ? `<div style="margin-bottom:12px">${q.imgs.map(i => `<img data-img="${i}" style="width:100%;border-radius:10px;margin-bottom:8px">`).join('')}</div>` : ''}
+    <div class="qtext">${mathHtml(q.question)}</div>
+    ${r.show ? `<div class="divider"></div>
+      ${(q.solImgs || []).length ? `<div style="margin-bottom:10px">${q.solImgs.map(i => `<img data-img="${i}" style="width:100%;border-radius:10px;margin-bottom:8px">`).join('')}</div>` : ''}
+      <div class="ans">${mathHtml(q.analysis || '（没有解析）')}</div>` : ''}
+  </div>`;
+  body += `<div class="row" style="margin:4px 0 10px">
+    ${r.mode === 'similar' ? '' : `<button class="btn ghost sm" onclick="slash('${q.id}',true)">🗡 斩题</button>`}<div class="sp"></div>
+    <span class="tag" style="max-width:60%">${esc((q.tags || [])[0] || '')}</span></div>
+    ${(q.tags || []).length > 1 ? `<div class="tagrow" style="margin:0 0 8px">${q.tags.slice(1).map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>` : ''}
+    ${(q.tags || []).filter(t => tagNote(t)).map(t => `<div class="tagnote">🧠 <b>${esc(t)}</b>：${esc(tagNote(t))}</div>`).join('')}`;
+  if (!r.show) {
+    body += `<button class="btn primary wide" style="padding:15px" onclick="S.review.show=true;render()">看解析</button>`;
+  } else {
+    body += `<div class="row" style="gap:10px">
+      <button class="btn danger" style="flex:1;padding:15px" onclick="gradeReview(false)">没会 · 再来</button>
+      <button class="btn primary" style="flex:1.4;padding:15px;background:#15803d" onclick="gradeReview(true)">会了 ✓</button>
+    </div>`;
+  }
+  body += `</div>`;
+  mount(hdr(r.mode === 'similar' ? '同类练习' : (bankById(r.bankId) ? bankById(r.bankId).name : '全部题库'), '#/', `<button class="icobtn" onclick="S.review=null;nav('#/')">✕</button>`) + body);
+}
+async function gradeReview(ok) {
+  const r = S.review; if (!r) return;
+  const q = r.list[r.idx]; if (!q) return;
+  if (r.mode === 'similar') {
+    if (ok) r.ok++; else r.bad++;
+    r.idx++; r.show = false;
+    if (r.idx >= r.list.length) r.done = true;
+    return render();
+  }
+  srsGrade(q, ok); q.updatedAt = now();
+  await dbPut('questions', q);
+  if (ok) r.ok++; else r.bad++;
+  r.idx++; r.show = false;
+  if (r.idx >= r.list.length) r.done = true;
+  render();
+}
+
+/* ============================================================
+   11. 斩题
+   ============================================================ */
+function slash(qid, inReview) {
+  const q = qById(qid); if (!q) return;
+  if (inReview && S.slashSkip) { doSlash(qid, [], 1); return; }
+  const tags = q.tags || [];
+  const sameTag = tags.length ? S.qs.filter(x => !x.trashed && x.id !== q.id &&
+    (x.tags || []).some(t => tags.includes(t)) && mastery(x) >= 2) : [];
+  openSheet(`<b>斩掉这道题</b>
+    <div class="tiny" style="margin:8px 0 14px">斩掉的题会从复习里消失，进回收站保留 15 天，随时能捞回来。</div>
+    <button class="btn primary wide" onclick="doSlash('${qid}',[],${inReview ? 1 : 0})">只斩这一题</button>
+    ${sameTag.length ? `<button class="btn ghost wide" style="margin-top:10px" onclick="doSlash('${qid}',[${sameTag.map(x => `'${x.id}'`).join(',')}],${inReview ? 1 : 0})">
+      连同「${esc(tags[0])}」下已熟练的 ${sameTag.length} 题一起斩</button>
+      <div class="tiny" style="margin-top:8px;text-align:center">这 ${sameTag.length} 题都已经复习过、标为熟练</div>` : ''}
+    ${inReview ? `<label class="row" style="justify-content:center;margin-top:16px;gap:8px;font-size:13px;color:#6b7280">
+      <input type="checkbox" id="slashSkip" style="width:18px;height:18px;margin:0"> 本轮复习不再询问</label>` : ''}
+    <button class="btn ghost wide" style="margin-top:10px" onclick="closeSheet()">取消</button>`);
+}
+async function doSlash(qid, extra, inReview) {
+  const sk = document.getElementById('slashSkip');
+  if (sk && sk.checked) S.slashSkip = true;
+  closeSheet();
+  const ids = [qid, ...extra];
+  const list = ids.map(id => qById(id)).filter(Boolean);
+  for (const q of list) { q.trashed = true; q.deletedAt = now(); q.slashed = true; await dbPut('questions', q); }
+  if (inReview && S.review) {
+    S.review.list = S.review.list.filter(q => !ids.includes(q.id));
+    if (S.review.idx >= S.review.list.length) S.review.done = true;
+  }
+  toast(`已斩 ${ids.length} 题`, {
+    label: '撤销', fn: async () => {
+      for (const q of list) { q.trashed = false; q.slashed = false; await dbPut('questions', q); }
+      render();
+    }
+  });
+  render();
+}
+
+/* ============================================================
+   11.5 从题源找同类题
+   ============================================================ */
+function tagSegs(t) { return String(t || '').split(/[-－—\/·、,，]/).map(x => x.trim()).filter(Boolean); }
+const GENERIC_TAG = new Set(['高数', '英语', '数学', '语文', '物理', '化学', '期末', '四级', '六级', '词汇', '练习']);
+function tagScore(a, b) {
+  if (a === b) return 5;
+  let sc = 0;
+  for (const x of tagSegs(a)) for (const y of tagSegs(b)) {
+    if (!x || !y) continue;
+    if (x === y) { if (!GENERIC_TAG.has(x)) sc += x.length >= 3 ? 3 : 2; }
+    else if (x.length >= 2 && y.length >= 2 && (x.includes(y) || y.includes(x))) sc += 1;
+  }
+  return sc;
+}
+function similarPool() {
+  return S.qs.filter(x => { const b = bankById(x.bankId); return !x.trashed && b && b.kind === 'source'; });
+}
+function rankSimilar(q, pool) {
+  const tags = q.tags || [];
+  return pool.map(x => {
+    let sc = 0;
+    for (const a of tags) for (const b of (x.tags || [])) sc += tagScore(a, b);
+    return { x, sc };
+  }).filter(r => r.sc > 0).sort((a, b) => b.sc - a.sc);
+}
+function showSimilarSheet(q, list, hint) {
+  openSheet(`<b>找到 ${list.length} 道同类题</b>
+    <div class="tiny" style="margin:8px 0 14px">${esc(hint)}练完不计入你的熟练度。</div>
+    <button class="btn primary wide" onclick="closeSheet();startSimilar([${list.map(x => `'${x.id}'`).join(',')}])">开始练这 ${list.length} 题</button>
+    <button class="btn ghost wide" style="margin-top:10px" onclick="closeSheet()">取消</button>`);
+}
+function findSimilar(qid) {
+  const q = qById(qid); if (!q) return;
+  const pool = similarPool();
+  if (!pool.length) return toast('还没装题源，点首页「📦 题源」装一个');
+  if (!(q.tags || []).length) return toast('先给这道题加个标签，才能按考点找同类题');
+  const ranked = rankSimilar(q, pool);
+  if (ranked.length >= 3) {
+    return showSimilarSheet(q, ranked.slice(0, 6).map(r => r.x), `按标签「${(q.tags)[0]}」从题源里筛的，`);
+  }
+  if (!chan('text').apiKey) {
+    if (ranked.length) return showSimilarSheet(q, ranked.slice(0, 6).map(r => r.x), '按标签匹配到的，');
+    return toast('题源里没找到同考点的题');
+  }
+  aiPickSimilar(q, pool, ranked);
+}
+async function aiPickSimilar(q, pool, ranked) {
+  toast('正在从题源里挑题…');
+  const base = ranked.slice(0, 40).map(r => r.x);
+  const rest = pool.filter(x => !base.includes(x)).slice(0, 60);
+  const cand = [...base, ...rest].slice(0, 80);
+  const lines = cand.map((x, i) => `[${i}] ${x.question.slice(0, 70).replace(/\n/g, ' ')}`).join('\n');
+  try {
+    const out = await aiChat([
+      { role: 'system', content: '你在帮学生挑同类练习题。只输出 JSON：{"picks":[题目编号]}。挑和原题考查同一知识点、同一解法的题，宁少勿滥。' },
+      { role: 'user', content: `原题：\n${q.question.slice(0, 400)}\n\n候选：\n${lines}\n\n挑出最多 6 道最相近的。` }
+    ]);
+    const j = parseJSON(out);
+    const list = (j.picks || []).map(i => cand[i]).filter(Boolean).slice(0, 6);
+    if (!list.length) return toast('没挑出合适的题，试试把标签写具体点');
+    showSimilarSheet(q, list, '按考点由 AI 从题源里挑的，');
+  } catch (e) {
+    if (ranked.length) return showSimilarSheet(q, ranked.slice(0, 6).map(r => r.x), '按标签匹配到的，');
+    toast('挑题失败：' + e.message);
+  }
+}
+function startSimilar(ids) {
+  const list = ids.map(qById).filter(Boolean);
+  if (!list.length) return;
+  S.review = { key: 'similar/' + Date.now(), bankId: null, mode: 'similar', list, idx: 0, show: false, ok: 0, bad: 0, done: false };
+  nav('#/review/similar/' + Date.now());
+}
+
+/* ============================================================
+   12. 能力报告
+   ============================================================ */
+
+/** 本地即时诊断：不联网、不算 token，打开就有 */
+function quickDiagnosis() {
+  const act = activeQs();
+  const tagStat = {};
+  act.forEach(q => {
+    const lapses = (q.srs && q.srs.lapses) || 0;
+    const isNew = !q.srs || !q.srs.reps;
+    (q.tags || []).forEach(t => {
+      const s = tagStat[t] || (tagStat[t] = { n: 0, lapses: 0, fresh: 0 });
+      s.n++; s.lapses += lapses; if (isNew) s.fresh++;
+    });
+  });
+  const due = dueList().length;
+  const weak = Object.entries(tagStat)
+    .filter(([, s]) => s.lapses > 0)
+    .sort((a, b) => b[1].lapses - a[1].lapses)
+    .slice(0, 3);
+  const forgotten = act
+    .filter(q => q.srs && q.srs.lapses >= 2)
+    .sort((a, b) => b.srs.lapses - a.srs.lapses)
+    .slice(0, 3);
+  const freshTags = Object.entries(tagStat)
+    .filter(([, s]) => s.lapses === 0 && s.fresh > 0)
+    .sort((a, b) => b[1].fresh - a[1].fresh)
+    .slice(0, 2);
+  return { act, due, weak, forgotten, freshTags, tagStat };
+}
+function diagnosisHtml() {
+  const d = quickDiagnosis();
+  const lines = [];
+  if (d.due > 0) lines.push(`<b>今天先刷：</b>${d.due} 道到期题，从「今日复习」进去最快。`);
+  else lines.push(`<b>今天没有到期题。</b>可以去错题本随手翻 10 道。`);
+  if (d.weak.length) {
+    lines.push(`<b>最该补：</b>${d.weak.map(([t, s]) => `${esc(t)}（忘 ${s.lapses} 次）`).join('、')}`);
+  } else if (d.act.length) {
+    lines.push(`<b>还没有反复忘的考点</b>，说明前几轮复习是有效的。`);
+  }
+  if (d.forgotten.length) {
+    lines.push(`<b>反复忘的题：</b>` + d.forgotten.map(q =>
+      `<span style="color:#2f6fed">${esc((q.tags || ['无标签'])[0])}</span> 忘了 ${q.srs.lapses} 次`).join('；'));
+  }
+  if (d.freshTags.length) {
+    lines.push(`<b>还没碰的新内容：</b>${d.freshTags.map(([t, s]) => `${esc(t)}（${s.fresh} 题）`).join('、')}`);
+  }
+  lines.push(`<b>建议：</b>${d.due > 0 ? '先把到期题清掉，再选 10 题小测验收。' : '选 10 题做个小测，比重新看一遍有效。'}`);
+  return `<div class="ans" style="line-height:1.9">${lines.map(l => `<div style="margin-bottom:6px">${l}</div>`).join('')}</div>`;
+}
+
+function viewReport() {
+  const act = activeQs();
+  const mineAll = S.qs.filter(q => isMineBank(bankById(q.bankId)));
+  const all = mineAll.length;
+  const slashed = mineAll.filter(q => q.trashed).length;
+  const newQ = act.filter(q => !q.srs || !q.srs.reps).length;
+  const learn = act.filter(q => q.srs && q.srs.reps && mastery(q) === 2).length;
+  const solid = act.filter(q => mastery(q) >= 3).length;
+  const weekAgo = now() - 7 * DAY;
+  const reviewed7 = act.filter(q => q.srs && q.srs.last && q.srs.last > weekAgo).length;
+  const tagCount = {};
+  act.forEach(q => (q.tags || []).forEach(t => { tagCount[t] = (tagCount[t] || 0) + 1; }));
+  const topTags = Object.entries(tagCount).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  const maxT = topTags.length ? topTags[0][1] : 1;
+
+  let body = `<div class="card" style="margin-top:14px"><div class="row" style="text-align:center">
+    <div class="stat" style="flex:1"><div class="v">${all}</div><div class="k">总收入</div></div>
+    <div class="stat" style="flex:1"><div class="v" style="color:#15803d">${slashed}</div><div class="k">已斩</div></div>
+    <div class="stat" style="flex:1"><div class="v" style="color:#2f6fed">${reviewed7}</div><div class="k">近 7 天复习</div></div>
+  </div></div>`;
+
+  body += `<div class="card"><b style="font-size:13.5px">掌握分布</b>
+    <div style="margin-top:12px">${[
+      ['刚收录，没复习', newQ, '#cbd5e1'],
+      ['在学（复习 1-2 次）', learn, '#f59e0b'],
+      ['熟练（间隔 ≥3 周）', solid, '#16a34a']
+    ].map(([k, v, c]) => {
+      const p = act.length ? Math.round(v / act.length * 100) : 0;
+      return `<div style="margin-bottom:10px"><div class="row tiny"><span>${k}</span><div class="sp"></div><span>${v} 题</span></div>
+        <div class="bar" style="margin-top:5px"><i style="width:${p}%;background:${c}"></i></div></div>`;
+    }).join('')}</div></div>`;
+
+  if (topTags.length) {
+    body += `<div class="card"><b style="font-size:13.5px">错得最多的考点</b>
+      <div class="hbars" style="margin-top:12px">${topTags.map(([t, n]) =>
+        `<div class="hbar"><span class="lbl">${esc(t)}</span><span class="tr"><i style="width:${n / maxT * 100}%"></i></span><span class="n">${n}</span></div>`).join('')}</div></div>`;
+  }
+  body += `<div class="card"><div class="row"><b style="font-size:13.5px">⚡ 快速诊断</b><div class="sp"></div>
+      <span class="tiny">本地算的，秒出</span></div>
+    <div style="margin-top:10px">${diagnosisHtml()}</div></div>`;
+  body += `<div class="card"><div class="row"><b style="font-size:13.5px">AI 细说</b><div class="sp"></div>
+      <span class="tiny" style="color:#8b93a1">要联网，约 5-10 秒</span></div>
+    <div class="tiny" style="margin:6px 0 0">上面的诊断已经够用了。想要一份更细的建议再点，会消耗一点 token。</div>
+    <button class="btn ghost wide sm" style="margin-top:10px" onclick="genReport()">让 AI 展开说说</button>
+    <div id="reportOut" class="ans" style="margin-top:10px;display:none"></div></div>`;
+  mount(hdr('能力报告', null, null) + `<div class="page">${body}</div>` + tabs('report'));
+}
+async function genReport() {
+  const act = activeQs();
+  if (!act.length) return toast('题库还是空的');
+  const out = $('#reportOut');
+  out.style.display = 'block';
+  out.innerHTML = '<span class="loading dark"></span> 正在分析…';
+  const tagCount = {};
+  act.forEach(q => (q.tags || []).forEach(t => { tagCount[t] = (tagCount[t] || 0) + 1; }));
+  const recent = act.filter(q => q.srs && q.srs.lapses > 0).slice(0, 6)
+    .map(q => `- [${(q.tags || []).slice(0, 2).join('/')}] ${q.question.slice(0, 36)}（忘 ${q.srs.lapses} 次）`).join('\n');
+  const brief = `总题数 ${mineAll.length}，已斩 ${mineAll.filter(q => q.trashed).length}，未复习 ${act.filter(q => !q.srs || !q.srs.reps).length}，熟练 ${act.filter(q => mastery(q) >= 3).length}。
+考点分布（题数）：${Object.entries(tagCount).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([t, n]) => t + ':' + n).join('；')}
+反复遗忘的题（节选）：
+${recent || '暂无'}`;
+  try {
+    const txt = await aiChat([
+      { role: 'system', content: '你是学习诊断老师。根据学生的错题数据，写一份简洁的学习报告：1) 当前水平判断；2) 最该补的 2-3 个薄弱点（要具体到知识点）；3) 下一步怎么练（可执行）；4) 一句鼓励。控制在 300 字内，分点写，不要长标题。' },
+      { role: 'user', content: brief }
+    ], { maxTokens: 400, temperature: 0.4 });
+    out.textContent = txt.trim();
+  } catch (e) { out.textContent = '生成失败：' + e.message; }
+}
+
+/* ============================================================
+   13. 出卷
+   ============================================================ */
+var EXAM = { bankId: 'all', tags: [], count: 10, src: 'mix', busy: false, paper: null };
+async function viewExam() {
+  const allTags = [...new Set(S.qs.filter(q => !q.trashed).flatMap(q => q.tags || []))];
+  let body = `<div class="card" style="margin-top:14px">
+    <div class="field"><label>从哪个题库出</label>
+      <select class="inp" onchange="EXAM.bankId=this.value;viewExam()">
+        <option value="all"${EXAM.bankId === 'all' ? ' selected' : ''}>全部题库</option>
+        ${S.banks.map(b => `<option value="${b.id}"${EXAM.bankId === b.id ? ' selected' : ''}>${esc(b.name)}</option>`).join('')}
+      </select></div>
+    <div class="field"><label>题量</label>
+      <div class="sug">${[5, 10, 15, 20].map(n => `<span class="s" style="cursor:pointer;${EXAM.count === n ? 'background:#2f6fed;color:#fff' : ''}" onclick="EXAM.count=${n};viewExam()">${n} 题</span>`).join('')}</div></div>
+    <div class="field"><label>题源</label>
+      <div class="sug">
+        ${[['mix', '真题为主+AI补'], ['real', '只用真题'], ['ai', '全 AI 变式']].map(([k, t]) =>
+          `<span class="s" style="cursor:pointer;${EXAM.src === k ? 'background:#2f6fed;color:#fff' : ''}" onclick="EXAM.src='${k}';viewExam()">${t}</span>`).join('')}
+      </div>
+      <div class="tiny" style="margin-top:8px">「真题」= 你收录的错题 + 导入的题库包；不够的部分才让 AI 编同类型题，卷面会标注。</div></div>
+    ${allTags.length ? `<div class="field"><label>只考这些考点（可多选，不选=全部）</label>
+      <div class="tagrow">${allTags.slice(0, 20).map(t => `<span class="tag ${EXAM.tags.includes(t) ? '' : 'g'}" style="cursor:pointer;${EXAM.tags.includes(t) ? 'background:#2f6fed;color:#fff' : ''}" onclick="toggleExamTag('${esc(t).replace(/'/g, '')}')">${esc(t)}</span>`).join('')}</div></div>` : ''}
+    <button class="btn primary wide" style="margin-top:6px" ${EXAM.busy ? 'disabled' : ''} onclick="genExam()">${EXAM.busy ? '<span class="loading"></span> 出卷中…' : '生成卷子'}</button>
+  </div>`;
+  if (EXAM.paper) body += examPaperHtml(EXAM.paper);
+  mount(hdr('出卷子', null, null) + `<div class="page">${body}</div>` + tabs('exam'));
+}
+function toggleExamTag(t) {
+  const i = EXAM.tags.indexOf(t);
+  if (i >= 0) EXAM.tags.splice(i, 1); else EXAM.tags.push(t);
+  viewExam();
+}
+function examPool() {
+  // 真题池包含你自己的错题 + 已装的题源（与界面上「真题 = 错题 + 题库包」的说明一致）
+  const bid = EXAM.bankId === 'all' ? null : EXAM.bankId;
+  let pool = S.qs.filter(q => !q.trashed && (!bid || q.bankId === bid));
+  if (EXAM.tags.length) pool = pool.filter(q => (q.tags || []).some(t => EXAM.tags.includes(t)));
+  return pool.slice();
+}
+function examPaperHtml(p) {
+  return `<div id="paper" class="card" style="margin-top:16px">
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:18px;font-weight:700">${esc(p.title)}</div>
+      <div class="tiny">共 ${p.questions.length} 题 · ${fmtDate(p.at)}</div>
+    </div>
+    ${p.questions.map((q, i) => `<div class="examq" style="margin-bottom:18px">
+      <div class="qtext">${i + 1}. ${mathHtml(q.q)}${q.src === 'ai' ? ' <span class="tag o">变式</span>' : ''}</div>
+    </div>`).join('')}
+    <div style="page-break-before:always;margin-top:24px;border-top:1px dashed #cbd5e1;padding-top:16px">
+      <div style="font-size:16px;font-weight:700;margin-bottom:12px">答案与解析</div>
+      ${p.questions.map((q, i) => `<div style="margin-bottom:14px"><div class="qtext" style="font-size:14px"><b>${i + 1}.</b> ${mathHtml(q.a)}</div></div>`).join('')}
+    </div>
+  </div>
+  <div class="noprint row" style="gap:10px;margin:10px 0 30px">
+    <button class="btn primary" style="flex:1" onclick="window.print()">打印 / 存 PDF</button>
+    <button class="btn ghost" onclick="EXAM.paper=null;viewExam()">重来</button>
+  </div>`;
+}
+async function genExam() {
+  const pool = examPool();
+  const n = EXAM.count;
+  EXAM.busy = true; viewExam();
+  try {
+    let chosen = [];
+    if (EXAM.src !== 'ai') {
+      const real = shuffle(pool.slice());
+      chosen = real.slice(0, EXAM.src === 'real' ? Math.min(n, real.length) : Math.ceil(n * 0.6));
+    }
+    const need = Math.max(0, n - chosen.length);
+    let gen = [];
+    if (need > 0) {
+      if (!S.settings.apiKey) { if (!chosen.length) throw new Error('没有配 API Key，无法生成变式题'); }
+      else {
+        const seeds = (chosen.length ? chosen : pool).slice(0, 8)
+          .map(q => `题目：${q.question}\n解析：${(q.analysis || '').slice(0, 400)}`).join('\n---\n');
+        const out = await aiChat([
+          { role: 'system', content: SYS_EXAM },
+          { role: 'user', content: `参考题：\n${seeds}\n\n请生成 ${need} 道同知识点的变式题。` }
+        ]);
+        const j = parseJSON(out);
+        gen = (j.questions || []).slice(0, need).map(x => ({ q: toText(x.q), a: toText(x.a), src: 'ai' }));
+      }
+    }
+    const questions = [
+      ...chosen.map(q => ({ q: q.question, a: q.analysis || '（无解析）', src: 'real' })),
+      ...gen
+    ];
+    if (!questions.length) throw new Error('没有可出的题');
+    EXAM.paper = { title: '错题变式练习卷', questions, at: now(), bankId: EXAM.bankId };
+  } catch (e) { toast('出卷失败：' + e.message); }
+  EXAM.busy = false; viewExam();
+  const p = $('#paper'); if (p && p.scrollIntoView) p.scrollIntoView({ behavior: 'smooth' });
+}
+function examFromBank(id) { EXAM.bankId = id; nav('#/exam'); }
+
+/* ============================================================
+   14. 设置
+   ============================================================ */
+const PRESETS = [
+  { n: 'DeepSeek（只能文字）', base: 'https://api.deepseek.com/v1', vision: '', text: 'deepseek-chat' },
+  { n: '阿里百炼 通义（能看图）', base: 'https://dashscope.aliyuncs.com/compatible-mode/v1', vision: 'qwen-vl-max-latest', text: 'qwen-plus' },
+  { n: '智谱 GLM（能看图，有免费档）', base: 'https://open.bigmodel.cn/api/paas/v4', vision: 'glm-4v-flash', text: 'glm-4-flash' },
+  { n: '硅基流动（能看图）', base: 'https://api.siliconflow.cn/v1', vision: 'Qwen/Qwen2.5-VL-72B-Instruct', text: 'Qwen/Qwen2.5-72B-Instruct' },
+  { n: 'OpenAI', base: 'https://api.openai.com/v1', vision: 'gpt-4o-mini', text: 'gpt-4o-mini' }
+];
+function viewSettings() {
+  const s = S.settings;
+  const t = s.text || {}, v = s.vision || {};
+  const tPresets = PRESETS.filter(p => p.text);
+  const vPresets = PRESETS.filter(p => p.vision);
+  let body = `<div class="card" style="margin-top:14px">
+    <b style="font-size:13.5px">① 文字模型 · 写解析 / 出卷 / 报告</b>
+    <div class="sug" style="margin-top:8px">${tPresets.map(p => `<span class="s" style="cursor:pointer" onclick="applyPreset('${p.base}','${p.text}','text')">${esc(p.n.replace(/（[^）]*）/g, ''))}</span>`).join('')}</div>
+    <div class="field" style="margin-top:12px"><label>API 地址</label>
+      <input class="inp" value="${esc(t.baseUrl || '')}" oninput="S.settings.text.baseUrl=this.value"></div>
+    <div class="field"><label>API Key</label>
+      <input class="inp" id="keyText" type="password" value="${esc(t.apiKey || '')}" placeholder="sk-..." oninput="S.settings.text.apiKey=this.value">
+      <div class="row" style="gap:8px;margin-top:6px">
+        <button class="btn ghost sm" onclick="toggleKeyVis('keyText',this)">👁 显示</button>
+        <button class="btn ghost sm" onclick="copyKey('keyText')">📋 复制</button>
+      </div></div>
+    <div class="field"><label>模型名</label>
+      <input class="inp" value="${esc(t.model || '')}" placeholder="deepseek-chat" oninput="S.settings.text.model=this.value"></div>
+    <button class="btn ghost wide sm" onclick="testAI('text')">测试文字模型</button>
+  </div>
+
+  <div class="card">
+    <b style="font-size:13.5px">② 识图模型 · 拍照识别题目</b>
+    <div class="tiny" style="margin:6px 0 8px">DeepSeek 看不了图。填一个能看图的模型就能拍照识别；<b>地址和 Key 留空 = 复用上面的</b>。不填也行：相册「提取文字」→ 粘贴题干 → 让 AI 写解析。</div>
+    <div class="sug">${vPresets.map(p => `<span class="s" style="cursor:pointer" onclick="applyPreset('${p.base}','${p.vision}','vision')">${esc(p.n.replace(/（[^）]*）/g, ''))} · ${esc(p.vision)}</span>`).join('')}</div>
+    <div class="field" style="margin-top:12px"><label>API 地址（可留空）</label>
+      <input class="inp" value="${esc(v.baseUrl || '')}" placeholder="${esc(t.baseUrl || '同上')}" oninput="S.settings.vision.baseUrl=this.value"></div>
+    <div class="field"><label>API Key（可留空）</label>
+      <input class="inp" id="keyVision" type="password" value="${esc(v.apiKey || '')}" placeholder="与文字模型同一家就留空" oninput="S.settings.vision.apiKey=this.value">
+      <div class="row" style="gap:8px;margin-top:6px">
+        <button class="btn ghost sm" onclick="toggleKeyVis('keyVision',this)">👁 显示</button>
+        <button class="btn ghost sm" onclick="copyKey('keyVision')">📋 复制</button>
+      </div></div>
+    <div class="field"><label>模型名（留空 = 不启用识图）</label>
+      <input class="inp" value="${esc(v.model || '')}" placeholder="glm-4v-flash / qwen-vl-max" oninput="S.settings.vision.model=this.value"></div>
+    <button class="btn ghost wide sm" onclick="testAI('vision')">测试识图模型</button>
+  </div>
+
+  <div class="card">
+    <b style="font-size:13.5px">③ 拍照清晰度 · 影响识图准不准</b>
+    <div class="tiny" style="margin:6px 0 8px">公式、小字、上下标糊掉，多半是这里压得太狠。档位越高越清楚，识图模型消耗的 token 也越多。</div>
+    <div class="sug">${Object.entries(IMG_MODES).map(([k, m]) => `<span class="s" style="cursor:pointer;${(s.img || 'single') === k ? 'background:#2f6fed;color:#fff' : ''}" onclick="S.settings.img='${k}';saveSettings();viewSettings();toast('已切换到 ${esc(m.label)}')">${esc(m.label)}</span>`).join('')}</div>
+    <div class="tiny" style="margin-top:8px">整页教材选「整页」，只拍一道题选「单题」，网络差或额度紧张选「省流量」。</div>
+  </div>
+  ${hasNative()
+    ? `<div class="card"><b style="font-size:13.5px">网络通道</b>
+    <div class="tiny" style="margin:6px 0 0;line-height:1.8">APP 内已启用<b>原生通道</b>：AI 请求由系统层直接发出，没有跨域限制，<b>不需要代理</b>，这一项不用配。</div></div>`
+    : `<label class="row" style="gap:10px;margin:2px 2px 8px;font-size:13px;color:#475569;line-height:1.5">
+    <input type="checkbox" ${s.proxy !== false ? 'checked' : ''} style="width:18px;height:18px;margin:0" onchange="S.settings.proxy=this.checked;saveSettings()">
+    <span>通过代理转发 AI 请求<br><span class="tiny">大模型 API 不允许浏览器直连，关掉就连不上</span></span>
+  </label>
+  <button class="btn ghost wide sm" style="margin:0 2px 8px" onclick="probeProxy()">🔌 测试代理连通性</button>
+  <div class="field" style="margin:0 2px 12px"><label>代理地址（留空 = 自动：本机 → 线上）</label>
+    <input class="inp" value="${esc(s.proxyUrl || '')}" placeholder="https://cuoti-proxy.你的子域.workers.dev" oninput="S.settings.proxyUrl=this.value">
+    <div class="tiny" style="margin-top:6px">部署到 Cloudflare Pages 时，这里填 Worker 的地址；本机运行就留空。</div></div>`}
+  <button class="btn primary wide" style="margin:4px 0 8px" onclick="saveSettings().then(()=>toast('已保存'))">保存设置</button>`;
+
+  body += `<div class="card"><b style="font-size:13.5px">数据</b>
+    <div class="tiny" style="margin:6px 0 12px">数据只在这台手机上。换手机、清缓存前，先导出备份。</div>
+    <div style="display:grid;gap:10px">
+      <button class="btn ghost wide" onclick="exportBackup()">导出备份（含图片）</button>
+      <label class="btn ghost wide" style="cursor:pointer;text-align:center">从备份恢复<input type="file" accept="application/json,.json" hidden onchange="importBackup(this)"></label>
+      <button class="btn primary wide" onclick="nav('#/packs')">📦 题源（高数 933 题 / 四六级词汇）</button>
+      <label class="btn ghost wide" style="cursor:pointer;text-align:center">导入本地题库包文件<input type="file" accept="application/json,.json" hidden onchange="importPack(this)"></label>
+      <button class="btn ghost wide" onclick="refixAll()">↻ 重排全部题目格式</button>
+      <button class="btn ghost wide" onclick="nav('#/trash')">回收站（${S.qs.filter(q => q.trashed).length}）</button>
+    </div>
+  </div>`;
+
+  body += `<div class="card"><b style="font-size:13.5px">危险操作</b>
+    <button class="btn danger wide" style="margin-top:12px" onclick="wipeAll()">清空所有数据</button></div>`;
+  body += `<div class="tiny" style="text-align:center;padding:10px 0 30px">错题集 · 本地版 · 数据不离开你的手机 · <span id="appver">${APP_VER}</span><br>
+    <a href="intro.html" target="_blank" style="color:#2f6fed">📖 介绍页（发给没听过的人）</a></div>`;
+  mount(hdr('设置', null, null) + `<div class="page">${body}</div>` + tabs('settings'));
+}
+
+function toggleKeyVis(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const show = el.type === 'password';
+  el.type = show ? 'text' : 'password';
+  if (btn) btn.textContent = show ? '🙈 隐藏' : '👁 显示';
+}
+async function copyKey(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const v = el.value || '';
+  if (!v) return toast('这里是空的');
+  try {
+    await navigator.clipboard.writeText(v);
+    toast('Key 已复制，去 APP 里粘贴');
+  } catch (e) {
+    el.type = 'text'; el.select();
+    toast('自动复制被拒，已选中，长按复制');
+  }
+}
+
+function applyPreset(base, model, ch) {
+  if (!S.settings[ch]) S.settings[ch] = { baseUrl: '', apiKey: '', model: '' };
+  S.settings[ch].baseUrl = base;
+  S.settings[ch].model = model;
+  saveSettings(); viewSettings(); toast('已套用，注意填 Key');
+}
+async function testAI(ch) {
+  await saveSettings();
+  toast('测试中…');
+  try {
+    const out = await aiChat([{ role: 'user', content: '回复两个字：正常' }], { maxTokens: 20, channel: ch || 'text' });
+    toast('连接正常：' + out.slice(0, 30));
+  } catch (e) { toast('失败：' + e.message); }
+}
+async function removeSource(id) {
+  if (!confirm('移除这个题源？题源里的题会从本机删掉，不影响你自己的错题。')) return;
+  for (const q of S.qs.filter(q => q.bankId === id)) {
+    for (const i of allImgs(q)) await dbDel('images', i);
+    await dbDel('questions', q.id);
+  }
+  S.qs = S.qs.filter(q => q.bankId !== id);
+  await dbDel('banks', id);
+  S.banks = S.banks.filter(b => b.id !== id);
+  toast('已移除题源'); nav('#/packs');
+}
+function download(name, text) {
+  const blob = new Blob([text], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+async function exportBackup() {
+  const imgs = [];
+  for (const q of S.qs) for (const id of allImgs(q)) {
+    const rec = await dbGet('images', id);
+    if (rec) imgs.push({ id, data: await blobToDataUrl(rec.blob) });
+  }
+  const pack = { app: 'cuoti', version: 1, at: now(), banks: S.banks, questions: S.qs, images: imgs };
+  download(`错题备份-${fmtDate(now())}.json`, JSON.stringify(pack));
+  toast('已导出，去下载目录找');
+}
+async function applyRestore(j) {
+  if (!j || !Array.isArray(j.banks) || !Array.isArray(j.questions)) throw new Error('不是有效的备份文件');
+  await dbClear('banks'); await dbClear('questions'); await dbClear('images');
+  for (const b of j.banks) await dbPut('banks', b);
+  for (const q of j.questions) await dbPut('questions', q);
+  let imgFail = 0;
+  for (const im of (j.images || [])) {
+    try {
+      const blob = await (await fetch(im.data)).blob();
+      await dbPut('images', { id: im.id, blob, createdAt: now() });
+    } catch (e) { imgFail++; }
+  }
+  S.imgCache.clear();
+  await loadAll();
+  render();
+  const mine = j.banks.filter(b => b.kind !== 'source').length;
+  toast(imgFail ? `恢复完成（${imgFail} 张图失败）` : `恢复完成：${mine} 个我的题库`);
+}
+
+async function importBackup(input) {
+  const f = input.files[0]; input.value = '';
+  if (!f) return;
+  if (!confirm('恢复备份会覆盖当前所有数据，继续？')) return;
+  try {
+    const j = JSON.parse(await f.text());
+    await applyRestore(j);
+  } catch (e) { toast('恢复失败：' + e.message); }
+}
+async function importPack(input) {
+  const f = input.files[0]; input.value = '';
+  if (!f) return;
+  try { await importPackData(JSON.parse(await f.text())); }
+  catch (e) { toast('导入失败：' + e.message); }
+}
+async function importPackData(j, opt) {
+  opt = opt || {};
+  // 防呆：这是完整备份而不是题源包时，别把它当题源塞进去
+  if (j && j.app === 'cuoti' && Array.isArray(j.banks)) {
+    if (!confirm('这是「完整备份」（含你的错题和复习记录），不是题源包。\n\n要恢复到本机吗？会覆盖现有数据。')) return;
+    await applyRestore(j);
+    return;
+  }
+  const name = j.name || '题库包';
+  const list = Array.isArray(j.questions) ? j.questions : (Array.isArray(j) ? j : null);
+  if (!list) throw new Error('格式不对，需要 {"name":"...","questions":[{"q":"..","a":"..","tags":[]}]}');
+  // 同名题源已存在时做「补齐」而不是重复建库：按题干去重，只补缺的
+  let b = S.banks.find(x => x.name === name && x.kind === 'source');
+  const isNew = !b;
+  if (isNew) {
+    b = { id: uid(), name, icon: j.subject === '英语' ? '🔤' : '📦', kind: 'source', createdAt: now() };
+    await dbPut('banks', b); S.banks.push(b);
+  }
+  const normQ = s => String(s || '').replace(/\s+/g, '').trim();
+  const have = new Set(S.qs.filter(q => q.bankId === b.id).map(q => normQ(q.question)));
+  const rows = [];
+  for (const x of list) {
+    const text = toText(x.q || x.question);
+    if (!text.trim()) continue;
+    const key = normQ(text);
+    if (have.has(key)) continue;
+    have.add(key);
+    rows.push({
+      id: uid(), bankId: b.id, question: text, analysis: toText(x.a || x.analysis),
+      tags: x.tags || [], imgs: [], origin: 'pack', createdAt: now(), updatedAt: now(), trashed: false,
+      srs: { ease: 2.5, ivl: 0, reps: 0, lapses: 0, due: 0 }
+    });
+  }
+  if (rows.length) {
+    await dbBulkPut('questions', rows);
+    S.qs.push(...rows);
+  }
+  const total = S.qs.filter(q => q.bankId === b.id).length;
+  if (isNew) toast(`装上题源「${name}」，共 ${total} 题`);
+  else if (rows.length) toast(`「${name}」补齐 ${rows.length} 题，现在共 ${total} 题`);
+  else toast(`「${name}」已经是完整的 ${total} 题了`);
+  nav('#/packs');
+}
+
+/** 把题源整份复制成「我的题库」，复制后能刷、能斩、会进统计和错题本 */
+async function sourceToMyBank(id) {
+  const src = bankById(id);
+  if (!src) return;
+  const list = qsOf(id);
+  if (!list.length) return toast('这个题源里没有题');
+  if (!confirm(`把「${src.name}」的 ${list.length} 题复制到「我的题库」？\n\n复制后：能刷、能斩、进统计、进错题本；题源本身保留不动。`)) return;
+  const nb = {
+    id: uid(), name: src.name.replace(/（[^）]*）/g, '').trim() + '（题库）',
+    icon: src.icon || '📘', color: '#eef3ff', kind: 'mine', createdAt: now()
+  };
+  await dbPut('banks', nb);
+  S.banks.push(nb);
+  const rows = list.map(q => ({
+    id: uid(), bankId: nb.id, question: q.question, analysis: q.analysis || '',
+    tags: (q.tags || []).slice(), imgs: [], origin: 'pack-copy',
+    createdAt: now(), updatedAt: now(), trashed: false,
+    srs: { ease: 2.5, ivl: 0, reps: 0, lapses: 0, due: 0 }
+  }));
+  await dbBulkPut('questions', rows);
+  S.qs.push(...rows);
+  toast(`已复制 ${rows.length} 题到「${nb.name}」`);
+  nav('#/bank/' + nb.id);
+}
+
+async function wipeAll() {
+  if (!confirm('清空所有题库、题目和图片？不可恢复。')) return;
+  if (!confirm('真的清空？建议先导出备份。')) return;
+  await dbClear('banks'); await dbClear('questions'); await dbClear('images');
+  S.banks = []; S.qs = []; S.imgCache.clear();
+  toast('已清空'); nav('#/');
+}
+
+/* ============================================================
+   15. 回收站
+   ============================================================ */
+function viewTrash() {
+  const list = S.qs.filter(q => q.trashed).sort((a, b) => (b.deletedAt || 0) - (a.deletedAt || 0));
+  let body = '';
+  if (!list.length) body = `<div class="empty"><div class="e">🍃</div>回收站是空的</div>`;
+  else {
+    body = `<div class="tiny" style="margin:14px 4px">斩掉的题都在这里，随时能恢复。<b>删除满 ${TRASH_DAYS} 天后自动清理</b>，想留就早点捞回去。</div>`;
+    body += list.map(q => `<div class="qitem">
+      <div class="qt">${esc(q.question).slice(0, 100)}</div>
+      <div class="tagrow"><span class="tag" style="background:#f1f4f9;color:#8b93a1">${q.slashed ? '已斩' : '已删'} ${relTime(q.deletedAt || q.createdAt)} · 还剩 ${trashDaysLeft(q)} 天</span>
+        <div class="sp"></div>
+        <span class="tiny" style="text-decoration:underline" onclick="restoreQ('${q.id}')">恢复</span>
+        <span class="tiny" style="color:#d92d20;margin-left:10px;text-decoration:underline" onclick="purgeQ('${q.id}')">彻底删除</span></div>
+    </div>`).join('');
+    body += `<button class="btn danger wide" style="margin:10px 0 30px" onclick="purgeAll()">清空回收站</button>`;
+  }
+  mount(hdr('回收站', '#/settings', null) + `<div class="page">${body}</div>`);
+}
+async function restoreQ(id) {
+  const q = qById(id); if (!q) return;
+  q.trashed = false; q.slashed = false; delete q.deletedAt;
+  await dbPut('questions', q); render(); toast('已恢复');
+}
+async function purgeQ(id) {
+  if (!confirm('彻底删除？无法恢复。')) return;
+  const q = qById(id); if (!q) return;
+  for (const i of allImgs(q)) await dbDel('images', i);
+  await dbDel('questions', id);
+  S.qs = S.qs.filter(x => x.id !== id); render(); toast('已彻底删除');
+}
+async function purgeAll() {
+  if (!confirm('清空回收站？这些题将无法恢复。')) return;
+  for (const q of S.qs.filter(q => q.trashed)) {
+    for (const i of allImgs(q)) await dbDel('images', i);
+    await dbDel('questions', q.id);
+  }
+  S.qs = S.qs.filter(q => !q.trashed); render(); toast('回收站已清空');
+}
+
+/* ============================================================
+   15.5 题库包
+   ============================================================ */
+async function viewPacks() {
+  const inst = sourceBanks();
+  let head = `<div class="tiny" style="margin:14px 4px;line-height:1.7">题源是给<b>你的错题</b>找同类练习用的，装在后台：不进「我的题库」、不参与每日复习、不计熟练度。<br>
+    想要能刷、能斩、进统计，用下面的<b>「导入我的题库」</b>复制一份。</div>`;
+  if (inst.length) {
+    head += `<div class="card flat"><b style="font-size:13.5px">已装的题源</b>` +
+      inst.map(b => {
+        const n = qsOf(b.id).length;
+        return `<div style="margin-top:12px;padding-top:12px;border-top:1px solid #f1f4f9">
+          <div class="row">
+            <div class="sp"><div style="font-size:14.5px">${esc(b.name)}</div><div class="tiny">本机 ${n} 题</div></div>
+            <button class="btn sm ghost" onclick="nav('#/bank/${b.id}')">看看</button>
+            <button class="btn sm danger" onclick="removeSource('${b.id}')">移除</button>
+          </div>
+          <div class="row" style="margin-top:8px;gap:8px">
+            <button class="btn sm primary" style="flex:1" onclick="sourceToMyBank('${b.id}')">导入我的题库（${n} 题）</button>
+          </div>
+        </div>`;
+      }).join('') + `</div>`;
+  }
+  head += `<label class="btn ghost wide sm" style="margin:0 0 4px;cursor:pointer;text-align:center">
+      从文件导入题源（.json）<input type="file" accept="application/json,.json" hidden onchange="importPack(this)"></label>`;
+  mount(hdr('题源', '#/settings', null) + `<div class="page" id="packList">${head}<div class="empty"><span class="loading dark"></span></div></div>`);
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 12000);
+    const r = await fetch('packs/index.json', { cache: 'no-store', signal: ctrl.signal });
+    clearTimeout(timer);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    let html = `<div class="row" style="margin:18px 4px 2px"><b style="font-size:13.5px;color:#475569">可用的题源</b></div>`;
+    html += j.packs.map(p => {
+      const b = S.banks.find(x => x.name === p.name && x.kind === 'source');
+      const got = b ? S.qs.filter(q => q.bankId === b.id).length : 0;
+      const full = got >= p.count;
+      const partial = got > 0 && !full;
+      return `<div class="card flat">
+        <div class="row"><div class="sp"><b style="font-size:15px">${esc(p.name)}</b>
+          <div class="tiny" style="margin-top:2px">${p.count} 题 · ${esc(p.subject || '')}${b ? ` · 本机已有 <b style="color:${full ? '#15803d' : '#b45309'}">${got}</b> 题` : ''}</div></div>
+          <button class="btn sm ${full ? 'ghost' : 'primary'}" ${full ? 'disabled' : ''} onclick="importPackFile('${p.file}','${esc(p.name)}')">${full ? '已装完' : (partial ? '补齐' : '装上')}</button>
+        </div>
+        ${partial ? `<div class="tiny" style="margin-top:6px;color:#b45309">只进来了 ${got}/${p.count} 题，点「补齐」把剩下的补上（不会重复）</div>` : ''}
+        <div class="tiny" style="margin-top:8px;line-height:1.6">${esc(p.desc || '')}</div>
+        <div class="tiny" style="margin-top:6px;opacity:.65">来源 ${esc(p.source || '')}</div>
+      </div>`;
+    }).join('');
+    $('#packList').innerHTML = head + html;
+  } catch (e) {
+    $('#packList').innerHTML = head + `<div class="empty"><div class="e">📦</div>读不到题源<br><span class="tiny">${esc(e.message)}</span></div>`;
+  }
+}
+async function importPackFile(file, name) {
+  toast('正在装「' + name + '」…');
+  try {
+    const r = await fetch('packs/' + file, { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    await importPackData(j);
+  } catch (e) { toast('导入失败：' + e.message); }
+}
+
+/* ============================================================
+   16. 启动
+   ============================================================ */
+(async function boot() {
+  try {
+    await dbOpen();
+    await loadAll();
+    await migrateCtrlText();
+    checkNewVersion();
+    const purged = await purgeExpiredTrash();
+    if (purged) toast(`回收站里 ${purged} 道题超过 ${TRASH_DAYS} 天，已自动清理`);
+    if (!location.hash) location.hash = '#/';
+    render();
+    // PWA：可「添加到主屏幕」，第二次打开走离线缓存
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      navigator.serviceWorker.register('sw.js').catch(() => { });
+    }
+  } catch (e) {
+    document.getElementById('app').innerHTML = `<div class="page"><div class="empty"><div class="e">⚠️</div>
+      存储初始化失败<br><span class="tiny">${esc(e.message)}</span><br>
+      <span class="tiny">如果是从文件直接打开的，浏览器可能禁用了本地数据库，需要改用 http 地址访问。</span></div></div>`;
+    console.error(e);
+  }
+})();
+</script>
+</body>
+</html>
