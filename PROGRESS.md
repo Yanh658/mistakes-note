@@ -17,14 +17,14 @@
 - [x] **去掉硬编码的 Worker 地址**：`REMOTE_PROXY` 默认空，用户要就自己填
 - [x] **拍照能调起相机**（之前「拍照」按钮实际打开的是相册）
 - [ ] 真机验证（相机 / 相册 / 返回键 / 识图全链路）
-- [x] **Release 签名配置 + GitHub Actions**（CI 已写好并本地验证过签名路径，只差你把密钥填进 Secrets）
+- [x] **Release 签名 + GitHub Actions**：v1.2.0 已发布（APK 由 CI 用 release keystore 签名）
 - [x] 开源前的隐私清理（Cloudflare 账号信息已移出仓库）
 - [ ] README 截图 / 演示 GIF
 
 ## 下一步（按顺序）
 
 1. 装 `dist/cuoti-debug-1.2.0.apk` 到手机，把 拍照 → 识图 → 入库 → 复习 走一遍
-2. 按 `docs/发布清单.md` 走一遍：生成 keystore → 配 4 个 Secrets → 提交推送 → 打 tag
+2. ~~按 `docs/发布清单.md` 走一遍~~ ✅ 已完成，Releases 上有 `cuoti-v1.2.0.apk`
 3. README 补截图 / GIF
 
 ## 这一版改了什么（v1.2.0 / APP_VER v28）
@@ -43,6 +43,6 @@
 
 - `usesCleartextTraffic=true`：允许 http 接口，方便用户填自建/校园网关；开源前可以考虑收紧
 - WebView 里 `checkNewVersion()` 会请求本地的 `version.json`，无害，留着
-- 目前只有 debug 签名；正式分发必须换 release keystore
+- v1.2.0 起用 release keystore 签名（密钥不在仓库里，CI 从 Secrets 还原）
 - 拍出来的照片存在 App 私有缓存 `cache/camera/`，系统空间紧张时可能被清理（照片本身已经
   压缩进 IndexedDB，不受影响）
