@@ -16,12 +16,18 @@
 
 <table>
   <tr>
+    <td><img src="docs/screenshots/00-tianjia.jpg" width="230"></td>
     <td><img src="docs/screenshots/01-tiku.jpg" width="230"></td>
+  </tr>
+  <tr>
+    <td align="center">拍照或相册录入，自动框选题干</td>
+    <td align="center">今天该复习哪些，一眼看到</td>
+  </tr>
+  <tr>
     <td><img src="docs/screenshots/02-chujuan.jpg" width="230"></td>
     <td><img src="docs/screenshots/03-baogao.jpg" width="230"></td>
   </tr>
   <tr>
-    <td align="center">今天该复习哪些，一眼看到</td>
     <td align="center">按考点组一套变式卷</td>
     <td align="center">错得最多的考点，本地算的</td>
   </tr>
