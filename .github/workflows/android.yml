@@ -47,7 +47,11 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      # 注意：这个 action 的默认 packages 里带一个老掉牙的 `tools`，
+      # 那个包早就从 SDK 仓库里删了，sdkmanager 会直接 exit 1。必须显式覆盖。
       - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
 
       - name: 安装 SDK 组件
         run: sdkmanager --install "platforms;android-35" "build-tools;35.0.0" "platform-tools"
@@ -81,6 +85,8 @@ jobs:
           java-version: '17'
 
       - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
 
       - name: 安装 SDK 组件
         run: sdkmanager --install "platforms;android-35" "build-tools;35.0.0" "platform-tools"
